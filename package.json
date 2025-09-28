@@ -65,12 +65,12 @@
     "react-native-webview": "13.8.6",
     "react-navigation": "^4.4.3"
   },
-  "overrides": {
-    "react-native-picker-select": {
-      "@react-native-picker/picker": "$@react-native-picker/picker"
-    },
-    "@react-native/dev-middleware": "0.81.4"
-  },
+        "overrides": {
+          "react-native-picker-select": {
+            "@react-native-picker/picker": "$@react-native-picker/picker"
+          },
+          "@react-native/dev-middleware": "0.81.4"
+        },
   "devDependencies": {
     "@babel/core": "^7.12.9",
     "@expo/cli": "^54.0.8",

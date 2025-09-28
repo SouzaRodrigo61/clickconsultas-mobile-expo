@@ -16,7 +16,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.clickconsultasinc.clickconsultas",
@@ -58,7 +60,8 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Permita que $(PRODUCT_NAME) use sua localização."
         }
-      ]
+      ],
+      "expo-font"
     ]
   }
 }

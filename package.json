@@ -69,7 +69,7 @@
     "react-native-picker-select": {
       "@react-native-picker/picker": "$@react-native-picker/picker"
     },
-    "@react-native/dev-middleware": "0.78.0"
+    "@react-native/dev-middleware": "0.81.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

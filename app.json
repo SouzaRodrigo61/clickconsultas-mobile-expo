@@ -1,0 +1,64 @@
+{
+  "expo": {
+    "name": "ClickConsultas",
+    "version": "1.0.2",
+    "slug": "click-consultas",
+    "orientation": "portrait",
+    "icon": "./src/images/notificationIcon.png",
+    "splash": {
+      "image": "./src/images/Splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#E5E5E5"
+    },
+    "notification": {
+      "icon": "./src/images/notificationIcon.png"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.clickconsultasinc.clickconsultas",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "useNextNotificationsApi": true,
+      "package": "com.clickconsultasinc.clickconsultas",
+      "googleServicesFile": "./google-services.json",
+      "versionCode": 25,
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAqgD0gn11M2Wz1A2ABnZArPqtclSIQlZI"
+        }
+      }
+    },
+    "web": {},
+    "extra": {
+      "eas": {
+        "projectId": "e81d0fb3-3352-469a-bab5-f114136798c7"
+      }
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 34,
+            "targetSdkVersion": 34,
+            "buildToolsVersion": "34.0.0"
+          },
+          "ios": {
+            "deploymentTarget": "15.0"
+          }
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Permita que $(PRODUCT_NAME) use sua localização."
+        }
+      ]
+    ]
+  }
+}

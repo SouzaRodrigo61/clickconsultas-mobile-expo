@@ -1,0 +1,35 @@
+{
+  "cli": {
+    "version": ">= 3.2.1"
+  },
+  "build": {
+    "apk": {
+      "android": {
+        "buildType": "apk",
+        "distribution": "internal"
+      }
+    },
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal"
+    },
+    "production": {
+      "autoIncrement": true
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "appleId": "appleId",
+        "ascAppId": "ascAppId",
+        "appleTeamId": "teamId"
+      },
+      "android": {
+        "serviceAccountKeyPath": "serviceAccountKeyPath"
+      }
+    }
+  }
+}

@@ -1,0 +1,169 @@
+import React, { useState, useEffect } from "react";
+import { StyleSheet, Text, View, Dimensions } from "react-native";
+import { RectButton } from "react-native-gesture-handler";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+import Colors from "../../styles/Colors";
+import Fonts from "../../styles/Fonts";
+import { Picker } from "@react-native-picker/picker";
+import RNPickerSelect from "react-native-picker-select";
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
+
+interface CityProps {
+  setCidade: any;
+}
+
+export default function City({ setCidade }: CityProps) {
+  const [cities, setCities] = useState([] as any);
+  const [ufs, setUfs] = useState([] as any);
+  const [pickerCity, setPickerCity] = useState("" as any);
+  const [pickerUf, setPickerUf] = useState("" as any);
+  const [enableCityPicker, setEnableCityPicker] = useState(false);
+
+  useEffect(() => {
+    axios.get("https://servicodados.ibge.gov.br/api/v1/localidades/estados").then((resp) => {
+      setUfs([...resp.data.sort((a, b) => a.sigla > b.sigla)]);
+    });
+  }, []);
+
+  useEffect(() => {
+    axios
+      .get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${pickerUf}/municipios`)
+      .then((resp) => {
+        setCities([...resp.data]);
+      });
+  }, [pickerUf]);
+
+  useEffect(() => {
+    setCidade([pickerUf, pickerCity]);
+  }, [pickerCity]);
+
+  function handleUf(itemValue) {
+    setPickerUf(itemValue);
+    if (pickerUf !== undefined) {
+      setEnableCityPicker(true);
+    }
+  }
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.grid}>
+        <RNPickerSelect
+          onValueChange={handleUf}
+          value={pickerUf}
+          items={ufs.map((uf) => ({ label: uf.sigla, value: uf.sigla }))}
+          useNativeAndroidPickerStyle={false}
+          style={{
+            placeholder: { color: "black", fontSize: 16 },
+            inputAndroid: { color: "black", fontSize: 16 },
+            inputAndroidContainer: {
+              height: 50,
+              width: (screenWidth - 60) / 3,
+              paddingLeft: 12,
+              justifyContent: "center"
+            },
+            inputIOS: { color: "black", fontSize: 16 },
+            inputIOSContainer: {
+              height: 50,
+              width: (screenWidth - 60) / 3,
+              paddingLeft: 12,
+              justifyContent: "center"
+            }
+          }}
+          Icon={() => (
+            <MaterialIcons
+              name="chevron-right"
+              size={20}
+              color="black"
+              style={{ transform: [{ rotate: "90deg" }] }}
+            />
+          )}
+          placeholder={{ label: "UF", value: "" }}
+        />
+        <RNPickerSelect
+          onValueChange={(itemValue) => setPickerCity(itemValue)}
+          value={pickerCity}
+          items={cities.map((city) => ({ label: city.nome, value: city.nome }))}
+          useNativeAndroidPickerStyle={false}
+          style={{
+            placeholder: { color: "black", fontSize: 16 },
+            inputAndroid: { color: "black", fontSize: 16 },
+            inputAndroidContainer: {
+              height: 50,
+              width: ((screenWidth - 60) / 3) * 2,
+              paddingLeft: 12,
+              justifyContent: "center"
+            },
+            inputIOS: { color: "black", fontSize: 16 },
+            inputIOSContainer: {
+              height: 50,
+              width: ((screenWidth - 60) / 3) * 2,
+              paddingLeft: 12,
+              justifyContent: "center"
+            }
+          }}
+          Icon={() => (
+            <MaterialIcons
+              name="chevron-right"
+              size={20}
+              color="black"
+              style={{ transform: [{ rotate: "90deg" }] }}
+            />
+          )}
+          placeholder={{ label: "Cidade", value: "" }}
+        />
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    position: "absolute",
+    left: 0,
+    bottom: 0,
+    right: 0,
+    width: screenWidth,
+    height: screenHeight / 3,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Colors.white,
+    padding: 20
+  },
+  grid: {
+    flexDirection: "row",
+    width: screenWidth - 40,
+    maxWidth: 600,
+    height: 65,
+    borderColor: Colors.softGray,
+    borderWidth: 2,
+    borderRadius: 4,
+    alignItems: "center",
+    padding: 5
+  },
+  text: {
+    fontFamily: Fonts.light,
+    fontSize: 14,
+    lineHeight: 16.41,
+    color: "rgba(0,0,0,0)",
+    marginLeft: 8,
+    marginRight: 4,
+    textAlign: "right"
+  },
+  onePickerItemUf: {
+    height: 50,
+    width: (screenWidth - 40) / 3,
+    maxWidth: 200,
+    color: "black",
+    margin: 0
+  },
+  onePickerItemCity: {
+    height: 50,
+    width: ((screenWidth - 40) / 3) * 2,
+    maxWidth: 330,
+    color: "black",
+    margin: 0
+  }
+});

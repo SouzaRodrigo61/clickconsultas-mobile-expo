@@ -6,13 +6,14 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "node": "20.18.3"
+      "node": "20.19.4"
     },
     "apk": {
       "android": {
         "buildType": "apk",
         "distribution": "internal"
-      }
+      },
+      "node": "20.19.4"
     },
     "preview": {
       "distribution": "internal"

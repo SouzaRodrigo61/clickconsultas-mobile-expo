@@ -22,12 +22,22 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.clickconsultasinc.clickconsultas",
-      "buildNumber": "1.0.0"
+      "buildNumber": "1.0.0",
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        }
+      }
     },
     "android": {
       "package": "com.clickconsultasinc.clickconsultas",
       "googleServicesFile": "./google-services.json",
       "versionCode": 25,
+      "usesCleartextTraffic": true,
+      "permissions": [
+        "INTERNET",
+        "ACCESS_NETWORK_STATE"
+      ],
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyAqgD0gn11M2Wz1A2ABnZArPqtclSIQlZI"
@@ -47,7 +57,9 @@
           "android": {
             "compileSdkVersion": 35,
             "targetSdkVersion": 35,
-            "buildToolsVersion": "35.0.0"
+            "buildToolsVersion": "35.0.0",
+            "usesCleartextTraffic": true,
+            "networkSecurityConfig": "./network_security_config.xml"
           },
           "ios": {
             "deploymentTarget": "15.1"

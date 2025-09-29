@@ -5,7 +5,7 @@ export const RECAPTCHA_TOKEN = '6LcDvHEaAAAAADExXf46EMayH7sxiPcyxMm9Cjrl';
 
 const api = axios.create({
   baseURL: `http://uo04sc8488480wcsck0s0448.72.60.12.76.sslip.io`,
-  timeout: 5000
+  timeout: 15000
 });
 
 api.interceptors.request.use(async (config) => {

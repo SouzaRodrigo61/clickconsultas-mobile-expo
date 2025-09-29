@@ -51,6 +51,7 @@ export default function Entrar() {
 
   const login = async () => {
     setLoading(true);
+    console.log("Tentando fazer login com:", data.email.value);
     await api
       .post("/login/paciente", {
         email: data.email.value,
@@ -58,10 +59,12 @@ export default function Entrar() {
         mobile: true,
       })
       .then((res) => {
+        console.log("Login bem-sucedido:", res.data);
         setLoading(false);
         signIn(res.data.user, res.data.token);
       })
-      .catch(() => {
+      .catch((error) => {
+        console.log("Erro no login:", error.response?.data || error.message);
         setLoading(false);
         return setError("Verifique suas informações e tente novamente.");
       });
@@ -252,7 +255,7 @@ const styles = StyleSheet.create({
     borderLeftColor: Colors.input,
     borderBottomLeftRadius: 4,
     borderTopLeftRadius: 4,
-
+    color: "#000", // Adicionar cor do texto
     width: screenWidth - 180,
     maxWidth: 470,
     height: 50,

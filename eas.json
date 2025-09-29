@@ -3,17 +3,15 @@
     "version": ">= 3.2.1"
   },
   "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal",
-      "node": "20.19.4"
-    },
     "apk": {
       "android": {
         "buildType": "apk",
         "distribution": "internal"
-      },
-      "node": "20.19.4"
+      }
+    },
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
     },
     "preview": {
       "distribution": "internal"

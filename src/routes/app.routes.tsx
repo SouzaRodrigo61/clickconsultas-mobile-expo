@@ -106,19 +106,34 @@ const AppRoutes: React.FC = () => {
   const responseListener: any = useRef()
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then((token) => setExpoPushToken(token))
+    const initializeNotifications = async () => {
+      try {
+        const token = await registerForPushNotificationsAsync()
+        setExpoPushToken(token)
 
-    notificationListener.current =
-      Notifications.addNotificationReceivedListener((notification) => {
-        setNotification(notification)
-      })
+        notificationListener.current =
+          Notifications.addNotificationReceivedListener((notification) => {
+            setNotification(notification)
+          })
 
-    responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {})
+        responseListener.current =
+          Notifications.addNotificationResponseReceivedListener((response) => {
+            console.log(response)
+          })
+      } catch (error) {
+        console.log('Erro ao inicializar notificações:', error)
+      }
+    }
+
+    initializeNotifications()
 
     return () => {
-      Notifications.removeNotificationSubscription(notificationListener.current)
-      Notifications.removeNotificationSubscription(responseListener.current)
+      if (notificationListener.current) {
+        Notifications.removeNotificationSubscription(notificationListener.current)
+      }
+      if (responseListener.current) {
+        Notifications.removeNotificationSubscription(responseListener.current)
+      }
     }
   }, [])
 
@@ -440,34 +455,39 @@ const AppRoutes: React.FC = () => {
 }
 
 async function registerForPushNotificationsAsync() {
-  let token
-  if (Constants.isDevice) {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync()
-    let finalStatus = existingStatus
-    if (existingStatus !== 'granted') {
-      const { status } = await Notifications.requestPermissionsAsync()
-      finalStatus = status
+  try {
+    let token
+    if (Constants.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync()
+      let finalStatus = existingStatus
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync()
+        finalStatus = status
+      }
+      if (finalStatus !== 'granted') {
+        console.log('Failed to get push token for push notification!')
+        return
+      }
+      token = (await Notifications.getExpoPushTokenAsync()).data
+      register(token)
+    } else {
+      console.log('Must use physical device for Push Notifications')
     }
-    if (finalStatus !== 'granted') {
-      console.log('Failed to get push token for push notification!')
-      return
+
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#2fa8d5',
+      })
     }
-    token = (await Notifications.getExpoPushTokenAsync()).data
-    register(token)
-  } else {
-    console.log('Must use physical device for Push Notifications')
-  }
 
-  if (Platform.OS === 'android') {
-    Notifications.setNotificationChannelAsync('default', {
-      name: 'default',
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#2fa8d5',
-    })
+    return token
+  } catch (error) {
+    console.log('Erro ao registrar notificações:', error)
+    return null
   }
-
-  return token
 }
 
 export default AppRoutes

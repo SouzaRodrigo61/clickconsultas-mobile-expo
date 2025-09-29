@@ -21,7 +21,7 @@ import {
 } from 'react-native-webview/lib/WebViewTypes'
 import api from '../services/api.js'
 
-import Pdf from 'react-native-pdf'
+// import Pdf from 'react-native-pdf' // Removido - não compatível com Expo Go
 import StatusBar from '../components/StatusBar'
 import Colors from '../styles/Colors'
 import Fonts from '../styles/Fonts'
@@ -750,14 +750,27 @@ export default function Cadastro() {
                       <ActivityIndicator color={Colors.blue} size="large" />
                     </View>
                   ) : (
-                    <Pdf
-                      source={source_fetch}
-                      trustAllCerts={false}
-                      style={{
-                        width: screenWidth - 35,
-                        height: screenHeight - 150,
-                      }}
-                    />
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
+                      <Text style={{ fontSize: 16, color: Colors.blue, textAlign: 'center', marginBottom: 20 }}>
+                        Para visualizar o documento, clique no botão abaixo:
+                      </Text>
+                      <TouchableOpacity 
+                        style={{
+                          backgroundColor: Colors.blue,
+                          paddingHorizontal: 20,
+                          paddingVertical: 12,
+                          borderRadius: 8,
+                        }}
+                        onPress={() => {
+                          // Abrir PDF no navegador
+                          Linking.openURL(source_fetch.uri);
+                        }}
+                      >
+                        <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
+                          Abrir Documento
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
                   )}
                 </ScrollView>
               </View>

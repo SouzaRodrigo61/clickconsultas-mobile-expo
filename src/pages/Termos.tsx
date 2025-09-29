@@ -5,9 +5,12 @@ import {
   Dimensions,
   ScrollView,
   StyleSheet,
+  Text,
   View,
+  Linking,
+  TouchableOpacity,
 } from 'react-native'
-import Pdf from 'react-native-pdf'
+import * as WebBrowser from 'expo-web-browser'
 import api from '../services/api.js'
 import Colors from '../styles/Colors'
 import Fonts from '../styles/Fonts'
@@ -35,8 +38,10 @@ export default function Termos() {
     }
   }, [])
 
-  const source_fetch = {
-    uri: pdf.file_url,
+  const openPdf = async () => {
+    if (pdf.file_url) {
+      await WebBrowser.openBrowserAsync(pdf.file_url)
+    }
   }
 
   return (
@@ -57,11 +62,17 @@ export default function Termos() {
             <ActivityIndicator color={Colors.blue} size="large" />
           </View>
         ) : (
-          <Pdf
-            source={source_fetch}
-            trustAllCerts={false}
-            style={{ width: screenWidth - 35, height: screenHeight - 150 }}
-          />
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
+            <Text style={{ fontSize: 16, color: Colors.blue, textAlign: 'center', marginBottom: 20 }}>
+              Para visualizar os termos de uso, clique no botão abaixo:
+            </Text>
+            <TouchableOpacity 
+              style={styles.button}
+              onPress={openPdf}
+            >
+              <Text style={styles.buttonText}>Abrir Termos de Uso</Text>
+            </TouchableOpacity>
+          </View>
         )}
       </ScrollView>
     </View>
@@ -86,9 +97,15 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     textAlign: 'justify',
   },
-  pdf: {
-    flex: 1,
-    width: screenWidth,
-    height: screenHeight,
+  button: {
+    backgroundColor: Colors.blue,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 8,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 })

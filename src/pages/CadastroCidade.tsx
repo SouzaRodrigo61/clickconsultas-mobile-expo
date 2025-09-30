@@ -12,6 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import api from "../services/api.js";
 
 import CityComponent from "../components/CadastroCidade/City";
+import SafeAreaWrapper from "../components/SafeAreaWrapper";
 
 import Colors from "../styles/Colors";
 import Fonts from "../styles/Fonts";
@@ -43,8 +44,9 @@ export default function CadastroCidade({ route }) {
     setLoading(false);
   }
   return (
-    <View style={styles.container}>
-      <StatusBar color="#2795BF" barStyle="light-content" />
+    <SafeAreaWrapper>
+      <View style={styles.container}>
+        <StatusBar color="#2795BF" barStyle="light-content" />
 
       <View style={styles.header}>
         <RectButton
@@ -72,7 +74,8 @@ export default function CadastroCidade({ route }) {
       </View>
 
       <CityComponent setCidade={setCity} />
-    </View>
+      </View>
+    </SafeAreaWrapper>
   );
 }
 

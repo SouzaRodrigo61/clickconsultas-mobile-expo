@@ -2,7 +2,7 @@ import React, { useState, useEffect, createRef } from "react";
 import { StyleSheet, View, Text, Modal, Dimensions } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import { TextInputMask } from "react-native-masked-text";
-import RNPickerSelect from "react-native-picker-select";
+import { Picker } from "@react-native-picker/picker";
 import { AntDesign } from "@expo/vector-icons";
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
@@ -110,36 +110,15 @@ export default function SecondSelected({
       <View style={styles.grid}>
         <View>
           <Text style={styles.titleTextGenero}>Gênero</Text>
-          <RNPickerSelect
-            placeholder={{
-              label: "Selecione",
-              value: null,
-              color: Colors.black,
-            }}
+          <Picker
+            selectedValue={infoNovoPaciente.genero}
             onValueChange={(genero) => handleChange(genero, "genero")}
-            items={[
-              { label: "Feminino", value: "Feminino", color: "black" },
-              { label: "Masculino", value: "Masculino" },
-            ]}
-            style={{
-              ...pickerSelectStyles,
-              placeholder: {
-                color: Colors.softGray,
-                fontSize: 18,
-              },
-              iconContainer: {
-                top: 12,
-                right: 2,
-              },
-            }}
-            Icon={() => {
-              return (
-                <AntDesign name="down" size={15} color="rgba(0, 0, 0, 0.3)" />
-              );
-            }}
-            useNativeAndroidPickerStyle={false}
-            value={infoNovoPaciente.genero}
-          />
+            style={styles.picker}
+          >
+            <Picker.Item label="Selecione" value="" />
+            <Picker.Item label="Feminino" value="Feminino" />
+            <Picker.Item label="Masculino" value="Masculino" />
+          </Picker>
           {error.genero.error && (
             <View style={styles.requiredContainer}>
               <AntDesign
@@ -330,5 +309,13 @@ const pickerSelectStyles = StyleSheet.create({
     width: (screenWidth / 2) - 50,
     paddingTop: 5,
     paddingBottom: 5, // to ensure the text is never behind the icon
+  },
+  picker: {
+    height: 50,
+    color: 'black',
+    fontSize: 16,
+    borderBottomWidth: 1,
+    borderColor: "rgba(0, 0, 0, 0.1)",
+    width: (screenWidth / 2) - 50,
   },
 });

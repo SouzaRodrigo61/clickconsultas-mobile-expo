@@ -1,18 +1,15 @@
 import React from "react";
 
-import { StatusBar } from "react-native";
+import { StatusBar } from "expo-status-bar";
 
 export default function BarraStatus({
-  color = "#F4F4F4",
-  barStyle = "dark-content",
+  color = "#2FA8D5",
+  barStyle = "light-content",
 }) {
   return (
     <StatusBar
-      barStyle={barStyle}
-      hidden={false}
+      style={barStyle === "light-content" ? "light" : "dark"}
       backgroundColor={color}
-      translucent={false}
-      networkActivityIndicatorVisible={true}
     />
   );
 }

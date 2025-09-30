@@ -11,6 +11,7 @@ import { RectButton } from "react-native-gesture-handler";
 
 import Cadastro from "../components/Perfil/CadastroPerfil";
 import Conta from "../components/Perfil/ContaPerfil";
+import SafeAreaWrapper from "../components/SafeAreaWrapper";
 
 import Colors from "../styles/Colors";
 import Fonts from "../styles/Fonts";
@@ -26,8 +27,9 @@ export default function Perfil({ route }) {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaWrapper>
       <StatusBar color="#2FA8D5" barStyle={"light-content"} />
+      <View style={styles.container}>
 
       <View style={styles.headerBar}>
         <RectButton style={styles.headerBarButton} onPress={select}>
@@ -83,7 +85,8 @@ export default function Perfil({ route }) {
       )}
 
       {firstSelected ? <Cadastro route={route.params} /> : <Conta />}
-    </View>
+      </View>
+    </SafeAreaWrapper>
   );
 }
 

@@ -13,7 +13,7 @@ import {
   View,
 } from 'react-native'
 import { RectButton, TouchableOpacity } from 'react-native-gesture-handler'
-import RNPickerSelect from 'react-native-picker-select'
+import { Picker } from '@react-native-picker/picker'
 import { useProfile } from '../../contexts/profile'
 import api from '../../services/api'
 import Colors from '../../styles/Colors'
@@ -148,40 +148,25 @@ export default function BuscarLocalidadeSearch({
         >
           <AntDesign name="close" size={20} color="white" />
         </RectButton>
-        <View>
-          <RNPickerSelect
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={data.picker}
             onValueChange={(itemValue) =>
               setData((state) => ({ ...state, picker: itemValue }))
             }
-            value={data.picker}
-            items={ufs.map((uf) => ({ label: uf.sigla, value: uf.sigla }))}
-            useNativeAndroidPickerStyle={false}
-            style={{
-              placeholder: { color: 'white' },
-              inputAndroid: { color: 'white' },
-              inputAndroidContainer: {
-                height: 50,
-                width: 65,
-                paddingLeft: 12,
-                justifyContent: 'center',
-              },
-              inputIOS: { color: 'white' },
-              inputIOSContainer: {
-                height: 50,
-                width: 65,
-                paddingLeft: 12,
-                justifyContent: 'center',
-              },
-            }}
-            Icon={() => (
-              <MaterialIcons
-                name="chevron-right"
-                size={20}
-                color="white"
-                style={{ transform: [{ rotate: '90deg' }] }}
-              />
-            )}
-            placeholder={{ label: 'UF', value: '' }}
+            style={styles.picker}
+            itemStyle={styles.pickerItem}
+          >
+            <Picker.Item label="UF" value="" />
+            {ufs.map((uf) => (
+              <Picker.Item key={uf.sigla} label={uf.sigla} value={uf.sigla} />
+            ))}
+          </Picker>
+          <MaterialIcons
+            name="chevron-right"
+            size={20}
+            color="white"
+            style={styles.pickerIcon}
           />
         </View>
         <SearchBar
@@ -288,5 +273,26 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     fontFamily: Fonts.bold,
     color: Colors.blue,
+  },
+  pickerContainer: {
+    height: 50,
+    width: 65,
+    justifyContent: 'center',
+    position: 'relative',
+  },
+  picker: {
+    height: 50,
+    width: 65,
+    color: 'white',
+  },
+  pickerItem: {
+    color: 'white',
+    fontSize: 16,
+  },
+  pickerIcon: {
+    position: 'absolute',
+    right: 8,
+    top: 15,
+    transform: [{ rotate: '90deg' }],
   },
 })

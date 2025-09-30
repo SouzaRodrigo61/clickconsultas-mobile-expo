@@ -13,6 +13,7 @@ import {
 
 import Colors from '../styles/Colors'
 import Fonts from '../styles/Fonts'
+import SafeAreaWrapper from '../components/SafeAreaWrapper'
 
 import { AntDesign } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
@@ -181,7 +182,8 @@ export default function EncontreAgende({ route }) {
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaWrapper>
+      <View style={styles.container}>
       <View style={styles.headerContainer}>
         <ArrowLeftButton colorIcon="#FFFFFF" />
         <View style={styles.headerContainerText}>
@@ -340,7 +342,8 @@ export default function EncontreAgende({ route }) {
         shuffle={shuffle}
         alphabeticalOrder={alphabeticalOrder}
       />
-    </View>
+      </View>
+    </SafeAreaWrapper>
   )
 }
 

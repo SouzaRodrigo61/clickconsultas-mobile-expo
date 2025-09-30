@@ -17,6 +17,7 @@ import Carousel, {
 import Colors from "../styles/Colors";
 import Fonts from "../styles/Fonts";
 import StatusBar from "../components/StatusBar";
+import SafeAreaWrapper from "../components/SafeAreaWrapper";
 
 const ENTRIES: any = [
   {
@@ -68,8 +69,9 @@ export default function BemVindo() {
   };
 
   return (
-    <View style={styles.container}>
-      <StatusBar />
+    <SafeAreaWrapper>
+      <View style={styles.container}>
+        <StatusBar />
 
       <Image
         source={require("../images/logotipo-clickconsultas-horizontal.png")}
@@ -129,7 +131,8 @@ export default function BemVindo() {
 
       <View style={styles.backCircle} />
       <View style={styles.backCircle2} />
-    </View>
+      </View>
+    </SafeAreaWrapper>
   );
 }
 

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View, Dimensions } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import HomeIcon from "./icons/Home";
 import CalendarIcon from "./icons/Calendar";
@@ -32,65 +33,70 @@ export default function NavBar({ setSelected }: SelectedProps) {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.iconscontainer}>
-        <RectButton style={styles.iconcontainer} onPress={handleNavigateToHome}>
-          <HomeIcon
-            colorIcon={select[0] === 1 ? Colors.blue : Colors.gray}
-            sizeIcon={20}
-          />
-          <Text
-            style={
-              select[0] === 1
-                ? { ...styles.text, color: Colors.blue }
-                : { ...styles.text, color: Colors.gray }
-            }
+    <SafeAreaView edges={['bottom']} style={styles.safeArea}>
+      <View style={styles.container}>
+        <View style={styles.iconscontainer}>
+          <RectButton style={styles.iconcontainer} onPress={handleNavigateToHome}>
+            <HomeIcon
+              colorIcon={select[0] === 1 ? Colors.blue : Colors.gray}
+              sizeIcon={20}
+            />
+            <Text
+              style={
+                select[0] === 1
+                  ? { ...styles.text, color: Colors.blue }
+                  : { ...styles.text, color: Colors.gray }
+              }
+            >
+              Inicio
+            </Text>
+          </RectButton>
+          <RectButton
+            style={styles.iconcontainer}
+            onPress={handleNavigateToCompromissos}
           >
-            Inicio
-          </Text>
-        </RectButton>
-        <RectButton
-          style={styles.iconcontainer}
-          onPress={handleNavigateToCompromissos}
-        >
-          <CalendarIcon
-            colorIcon={select[1] === 1 ? Colors.blue : Colors.gray}
-            sizeIcon={20}
-          />
-          <Text
-            style={
-              select[1] === 1
-                ? { ...styles.text, color: Colors.blue }
-                : { ...styles.text, color: Colors.gray }
-            }
+            <CalendarIcon
+              colorIcon={select[1] === 1 ? Colors.blue : Colors.gray}
+              sizeIcon={20}
+            />
+            <Text
+              style={
+                select[1] === 1
+                  ? { ...styles.text, color: Colors.blue }
+                  : { ...styles.text, color: Colors.gray }
+              }
+            >
+              Compromissos
+            </Text>
+          </RectButton>
+          <RectButton
+            style={styles.iconcontainer}
+            onPress={handleNavigateToPerfil}
           >
-            Compromissos
-          </Text>
-        </RectButton>
-        <RectButton
-          style={styles.iconcontainer}
-          onPress={handleNavigateToPerfil}
-        >
-          <UserIcon
-            colorIcon={select[2] === 1 ? Colors.blue : Colors.gray}
-            sizeIcon={20}
-          />
-          <Text
-            style={
-              select[2] === 1
-                ? { ...styles.text, color: Colors.blue }
-                : { ...styles.text, color: Colors.gray }
-            }
-          >
-            Perfil
-          </Text>
-        </RectButton>
+            <UserIcon
+              colorIcon={select[2] === 1 ? Colors.blue : Colors.gray}
+              sizeIcon={20}
+            />
+            <Text
+              style={
+                select[2] === 1
+                  ? { ...styles.text, color: Colors.blue }
+                  : { ...styles.text, color: Colors.gray }
+              }
+            >
+              Perfil
+            </Text>
+          </RectButton>
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    backgroundColor: Colors.white,
+  },
   container: {
     // position:'absolute',
     // left:0,

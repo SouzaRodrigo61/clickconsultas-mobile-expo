@@ -8,7 +8,6 @@ import {
   BackHandler,
   Dimensions,
 } from "react-native";
-import Slider from "@react-native-community/slider";
 import GestureRecognizer from "react-native-swipe-gestures";
 import Colors from "../../styles/Colors";
 import Fonts from "../../styles/Fonts";
@@ -189,21 +188,27 @@ export default function ModalFiltro({
               >
                 {radius} Km
               </Text>
-              <Slider
-                style={{
-                  width: screenWidth - 100,
-                  height: 40,
-                  alignSelf: "center",
-                }}
-                minimumValue={5}
-                maximumValue={200}
-                minimumTrackTintColor="#2fa8d5"
-                maximumTrackTintColor="#000000"
-                thumbTintColor="#2fa8d5"
-                onValueChange={(v) => setRadius(v)}
-                step={5}
-                value={radius}
-              />
+              <View style={styles.sliderContainer}>
+                <View style={styles.sliderTrack}>
+                  <View 
+                    style={[
+                      styles.sliderProgress, 
+                      { width: `${((radius - 5) / (200 - 5)) * 100}%` }
+                    ]} 
+                  />
+                  <TouchableOpacity
+                    style={[
+                      styles.sliderThumb,
+                      { left: `${((radius - 5) / (200 - 5)) * 100}%` }
+                    ]}
+                    onPress={() => {}}
+                  />
+                </View>
+                <View style={styles.sliderLabels}>
+                  <Text style={styles.sliderLabel}>5km</Text>
+                  <Text style={styles.sliderLabel}>200km</Text>
+                </View>
+              </View>
             </>
           )}
         </GestureRecognizer>
@@ -261,5 +266,39 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 15,
     marginRight: 10,
+  },
+  sliderContainer: {
+    width: screenWidth - 100,
+    alignSelf: "center",
+    marginTop: 20,
+  },
+  sliderTrack: {
+    height: 4,
+    backgroundColor: "#000000",
+    borderRadius: 2,
+    position: "relative",
+  },
+  sliderProgress: {
+    height: 4,
+    backgroundColor: "#2fa8d5",
+    borderRadius: 2,
+  },
+  sliderThumb: {
+    width: 20,
+    height: 20,
+    backgroundColor: "#2fa8d5",
+    borderRadius: 10,
+    position: "absolute",
+    top: -8,
+    marginLeft: -10,
+  },
+  sliderLabels: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 10,
+  },
+  sliderLabel: {
+    fontSize: 12,
+    color: Colors.gray,
   },
 });

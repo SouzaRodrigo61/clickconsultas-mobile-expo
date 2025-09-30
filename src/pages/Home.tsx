@@ -19,6 +19,7 @@ import { Ionicons, Fontisto, AntDesign } from "@expo/vector-icons";
 
 import NavBar from "../components/NavBar";
 import StatusBar from "../components/StatusBar";
+import SafeAreaWrapper from "../components/SafeAreaWrapper";
 import CardEspecialidades from "../components/EncontreAgende/Especialidades";
 import SolicitacaoData from "../components/Home/SolicitacaoData";
 
@@ -99,7 +100,7 @@ export default function Home({}) {
   }, [navigation]);
 
   return (
-    <>
+    <SafeAreaWrapper>
       <StatusBar color="white" barStyle="dark-content" />
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -168,7 +169,7 @@ export default function Home({}) {
         </ImageBackground>
       </ScrollView>
       <NavBar setSelected={[1, 0, 0]} />
-    </>
+    </SafeAreaWrapper>
   );
 }
 

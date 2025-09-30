@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, Dimensions} from 'react-native';
 import CardTextServicos from '../components/Servicos/CardTextServicos';
 import { RectButton, ScrollView } from 'react-native-gesture-handler';
 import NavBar from '../components/NavBar';
+import SafeAreaWrapper from '../components/SafeAreaWrapper';
 import  Colors  from '../styles/Colors';
 import Fonts from "../styles/Fonts";
 import { useNavigation } from '@react-navigation/native';
@@ -13,23 +14,25 @@ export default function Servicos() {
     const navigation = useNavigation(); 
 
     return(
-        <View style={styles.container}>
-            <ScrollView style={styles.scrollcontainer}>
-                <CardTextServicos/>
+        <SafeAreaWrapper>
+            <View style={styles.container}>
+                <ScrollView style={styles.scrollcontainer}>
+                    <CardTextServicos/>
 
-                <View style={styles.buttonscontainer}>
-                    <RectButton style={styles.buttoncontainerAzul} 
-                        onPress={() => (navigation.navigate('SelecioneData'))}
-                    >
-                        <Text style={styles.textButton}>Agendar Consulta</Text>
-                    </RectButton> 
+                    <View style={styles.buttonscontainer}>
+                        <RectButton style={styles.buttoncontainerAzul} 
+                            onPress={() => (navigation.navigate('SelecioneData'))}
+                        >
+                            <Text style={styles.textButton}>Agendar Consulta</Text>
+                        </RectButton> 
+                    </View>
+                </ScrollView>
+
+                <View style={styles.navcontainer}>
+                    <NavBar setSelected={[1,0,0]}/>
                 </View>
-            </ScrollView>
-
-            <View style={styles.navcontainer}>
-                <NavBar setSelected={[1,0,0]}/>
             </View>
-        </View>
+        </SafeAreaWrapper>
     )
 }
 

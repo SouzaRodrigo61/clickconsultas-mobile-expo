@@ -15,6 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import api from "../services/api";
 
 import { useAuth } from "../contexts/auth";
+import SafeAreaWrapper from "../components/SafeAreaWrapper";
 
 import Colors from "../styles/Colors";
 import Fonts from "../styles/Fonts";
@@ -76,7 +77,8 @@ export default function Entrar() {
   }
 
   return (
-    <ScrollView style={styles.color}>
+    <SafeAreaWrapper>
+      <ScrollView style={styles.color}>
       <View style={styles.image}>
         <Image
           source={ColorfulLogo}
@@ -167,7 +169,8 @@ export default function Entrar() {
           </View>
         </View>
       </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaWrapper>
   );
 }
 

@@ -33,7 +33,6 @@
       "package": "com.clickconsultasinc.clickconsultas",
       "googleServicesFile": "./google-services.json",
       "versionCode": 25,
-      "usesCleartextTraffic": true,
       "permissions": [
         "INTERNET",
         "ACCESS_NETWORK_STATE"

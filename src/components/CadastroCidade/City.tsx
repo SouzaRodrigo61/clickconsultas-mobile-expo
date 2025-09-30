@@ -7,7 +7,6 @@ import axios from "axios";
 import Colors from "../../styles/Colors";
 import Fonts from "../../styles/Fonts";
 import { Picker } from "@react-native-picker/picker";
-import RNPickerSelect from "react-native-picker-select";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
@@ -50,70 +49,43 @@ export default function City({ setCidade }: CityProps) {
   return (
     <View style={styles.container}>
       <View style={styles.grid}>
-        <RNPickerSelect
-          onValueChange={handleUf}
-          value={pickerUf}
-          items={ufs.map((uf) => ({ label: uf.sigla, value: uf.sigla }))}
-          useNativeAndroidPickerStyle={false}
-          style={{
-            placeholder: { color: "black", fontSize: 16 },
-            inputAndroid: { color: "black", fontSize: 16 },
-            inputAndroidContainer: {
-              height: 50,
-              width: (screenWidth - 60) / 3,
-              paddingLeft: 12,
-              justifyContent: "center"
-            },
-            inputIOS: { color: "black", fontSize: 16 },
-            inputIOSContainer: {
-              height: 50,
-              width: (screenWidth - 60) / 3,
-              paddingLeft: 12,
-              justifyContent: "center"
-            }
-          }}
-          Icon={() => (
-            <MaterialIcons
-              name="chevron-right"
-              size={20}
-              color="black"
-              style={{ transform: [{ rotate: "90deg" }] }}
-            />
-          )}
-          placeholder={{ label: "UF", value: "" }}
-        />
-        <RNPickerSelect
-          onValueChange={(itemValue) => setPickerCity(itemValue)}
-          value={pickerCity}
-          items={cities.map((city) => ({ label: city.nome, value: city.nome }))}
-          useNativeAndroidPickerStyle={false}
-          style={{
-            placeholder: { color: "black", fontSize: 16 },
-            inputAndroid: { color: "black", fontSize: 16 },
-            inputAndroidContainer: {
-              height: 50,
-              width: ((screenWidth - 60) / 3) * 2,
-              paddingLeft: 12,
-              justifyContent: "center"
-            },
-            inputIOS: { color: "black", fontSize: 16 },
-            inputIOSContainer: {
-              height: 50,
-              width: ((screenWidth - 60) / 3) * 2,
-              paddingLeft: 12,
-              justifyContent: "center"
-            }
-          }}
-          Icon={() => (
-            <MaterialIcons
-              name="chevron-right"
-              size={20}
-              color="black"
-              style={{ transform: [{ rotate: "90deg" }] }}
-            />
-          )}
-          placeholder={{ label: "Cidade", value: "" }}
-        />
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={pickerUf}
+            onValueChange={handleUf}
+            style={styles.picker}
+          >
+            <Picker.Item label="UF" value="" />
+            {ufs.map((uf) => (
+              <Picker.Item key={uf.sigla} label={uf.sigla} value={uf.sigla} />
+            ))}
+          </Picker>
+          <MaterialIcons
+            name="chevron-right"
+            size={20}
+            color="black"
+            style={styles.pickerIcon}
+          />
+        </View>
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={pickerCity}
+            onValueChange={(itemValue) => setPickerCity(itemValue)}
+            style={[styles.picker, styles.cityPicker]}
+            enabled={enableCityPicker}
+          >
+            <Picker.Item label="Cidade" value="" />
+            {cities.map((city) => (
+              <Picker.Item key={city.nome} label={city.nome} value={city.nome} />
+            ))}
+          </Picker>
+          <MaterialIcons
+            name="chevron-right"
+            size={20}
+            color="black"
+            style={styles.pickerIcon}
+          />
+        </View>
       </View>
     </View>
   );
@@ -165,5 +137,24 @@ const styles = StyleSheet.create({
     maxWidth: 330,
     color: "black",
     margin: 0
-  }
+  },
+  pickerContainer: {
+    height: 50,
+    justifyContent: 'center',
+    position: 'relative',
+  },
+  picker: {
+    height: 50,
+    color: 'black',
+    fontSize: 16,
+  },
+  cityPicker: {
+    width: ((screenWidth - 60) / 3) * 2,
+  },
+  pickerIcon: {
+    position: 'absolute',
+    right: 8,
+    top: 15,
+    transform: [{ rotate: '90deg' }],
+  },
 });

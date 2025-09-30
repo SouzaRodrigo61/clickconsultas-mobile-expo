@@ -11,6 +11,7 @@ import {
 import Colors from "../styles/Colors";
 import Fonts from "../styles/Fonts";
 import StatusBar from "../components/StatusBar";
+import SafeAreaWrapper from "../components/SafeAreaWrapper";
 
 import { useNavigation } from "@react-navigation/native";
 
@@ -26,8 +27,9 @@ export default function FormaDePagamento({ route }) {
   }
 
   return (
-    <View style={styles.mainContainer}>
+    <SafeAreaWrapper>
       <StatusBar color="#2fa8d5" barStyle="light-content" />
+      <View style={styles.mainContainer}>
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.notFound}>
@@ -72,7 +74,8 @@ export default function FormaDePagamento({ route }) {
             ))}
         </View>
       </ScrollView>
-    </View>
+      </View>
+    </SafeAreaWrapper>
   );
 }
 

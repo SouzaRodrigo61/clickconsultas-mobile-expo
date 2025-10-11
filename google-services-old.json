@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1082200906349",
+    "project_id": "clickconsultas-a43fc",
+    "storage_bucket": "clickconsultas-a43fc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1082200906349:android:ded965d83638fe2436fd64",
+        "android_client_info": {
+          "package_name": "com.clickconsultasinc.clickconsultas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1082200906349-302qgugg21tk64dr6ua9tpu5cv1njgnj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZEnIcZt_tRduXPexUF4QZvpDfDCU-H8g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1082200906349-302qgugg21tk64dr6ua9tpu5cv1njgnj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

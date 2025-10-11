@@ -1,36 +1,26 @@
 {
   "project_info": {
-    "project_number": "1082200906349",
-    "project_id": "clickconsultas-a43fc",
-    "storage_bucket": "clickconsultas-a43fc.appspot.com"
+    "project_number": "794294717735",
+    "project_id": "clickconsultas-1b652",
+    "storage_bucket": "clickconsultas-1b652.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1082200906349:android:ded965d83638fe2436fd64",
+        "mobilesdk_app_id": "1:794294717735:android:ca8172eb2f267fd7e7ad02",
         "android_client_info": {
           "package_name": "com.clickconsultasinc.clickconsultas"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "1082200906349-302qgugg21tk64dr6ua9tpu5cv1njgnj.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCZEnIcZt_tRduXPexUF4QZvpDfDCU-H8g"
+          "current_key": "AIzaSyAm2jGWHYbkM03c03OgsklyAbDqh5O4WGg"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1082200906349-302qgugg21tk64dr6ua9tpu5cv1njgnj.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

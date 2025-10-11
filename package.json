@@ -66,6 +66,9 @@
           "react-native-vector-icons"
         ],
         "listUnknownPackages": false
+      },
+      "appConfigFieldsCheck": {
+        "ignore": true
       }
     }
   },

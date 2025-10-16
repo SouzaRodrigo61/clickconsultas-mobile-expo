@@ -91,6 +91,8 @@ Notifications.setNotificationHandler({
     shouldShowAlert: true,
     shouldPlaySound: false,
     shouldSetBadge: false,
+    shouldShowBanner: true,
+    shouldShowList: true,
   }),
 })
 
@@ -102,8 +104,8 @@ const AppRoutes: React.FC = () => {
   const [notification, setNotification] = useState<
     Notifications.Notification | boolean
   >(false)
-  const notificationListener: any = useRef()
-  const responseListener: any = useRef()
+  const notificationListener: any = useRef(null)
+  const responseListener: any = useRef(null)
 
   useEffect(() => {
     const initializeNotifications = async () => {
@@ -129,10 +131,10 @@ const AppRoutes: React.FC = () => {
 
     return () => {
       if (notificationListener.current) {
-        Notifications.removeNotificationSubscription(notificationListener.current)
+        notificationListener.current.remove()
       }
       if (responseListener.current) {
-        Notifications.removeNotificationSubscription(responseListener.current)
+        responseListener.current.remove()
       }
     }
   }, [])

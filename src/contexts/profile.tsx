@@ -34,7 +34,7 @@ const ProfileContext = createContext<ProfileContextData>(
   {} as ProfileContextData
 );
 
-const ProfileProvider: React.FC = ({ children }) => {
+const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [profile, setProfile] = useState<Profile | null>(null);
   return (
     <ProfileContext.Provider value={{ profile, setProfile }}>

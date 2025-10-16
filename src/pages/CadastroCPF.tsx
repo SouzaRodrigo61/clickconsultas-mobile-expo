@@ -117,7 +117,7 @@ export default function CadastroCPF({ route }) {
 
       {required && (
         <View style={styles.requiredContainer}>
-          <AntDesign name="exclamationcircleo" size={12} color={Colors.white} />
+          <AntDesign name="warning" size={12} color={Colors.white} />
           <Text style={styles.textRequired}>{errorMessage}</Text>
         </View>
       )}

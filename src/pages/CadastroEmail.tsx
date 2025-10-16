@@ -163,7 +163,7 @@ export default function CadastroEmail({ route }) {
         {required && (
           <View style={styles.requiredContainer}>
             <AntDesign
-              name="exclamationcircleo"
+              name="warning"
               size={12}
               color={Colors.white}
             />

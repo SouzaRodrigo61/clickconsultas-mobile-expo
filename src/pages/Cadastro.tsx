@@ -1,5 +1,6 @@
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import React, { useEffect, useState } from 'react'
 import {
   ActivityIndicator,
@@ -30,6 +31,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 
 export default function Cadastro() {
   const navigation = useNavigation()
+  const insets = useSafeAreaInsets()
   const [required, setRequired] = useState(false as boolean)
   const [loading, setLoading] = useState(false as Boolean)
   const [errorMessage, setErrorMessage] = useState<string>('')
@@ -303,7 +305,7 @@ export default function Cadastro() {
       case 'nome':
         return (
           <>
-            <View style={styles.header}>
+            <View style={[styles.header, { paddingTop: insets.top }]}>
               <RectButton
                 style={styles.buttonContainerIcon}
                 onPress={() => navigation.goBack()}
@@ -350,7 +352,7 @@ export default function Cadastro() {
             {required && (
               <View style={styles.requiredContainer}>
                 <AntDesign
-                  name="exclamationcircleo"
+                  name="warning"
                   size={14}
                   color="#FFFFFF"
                 />
@@ -362,7 +364,7 @@ export default function Cadastro() {
       case 'contato':
         return (
           <>
-            <View style={styles.header}>
+            <View style={[styles.header, { paddingTop: insets.top }]}>
               <RectButton
                 style={styles.buttonContainerIcon}
                 onPress={() => navigation.goBack()}
@@ -408,7 +410,7 @@ export default function Cadastro() {
             {required && (
               <View style={styles.requiredContainer}>
                 <AntDesign
-                  name="exclamationcircleo"
+                  name="warning"
                   size={12}
                   color={Colors.white}
                 />
@@ -420,7 +422,7 @@ export default function Cadastro() {
       case 'email':
         return (
           <>
-            <View style={styles.header}>
+            <View style={[styles.header, { paddingTop: insets.top }]}>
               <RectButton
                 style={styles.buttonContainerIcon}
                 onPress={() => navigation.goBack()}
@@ -494,7 +496,7 @@ export default function Cadastro() {
               {required && (
                 <View style={styles.requiredContainer}>
                   <AntDesign
-                    name="exclamationcircleo"
+                    name="warning"
                     size={12}
                     color={Colors.white}
                   />
@@ -507,7 +509,7 @@ export default function Cadastro() {
       case 'verificacao':
         return (
           <>
-            <View style={styles.header}>
+            <View style={[styles.header, { paddingTop: insets.top }]}>
               <RectButton
                 style={styles.buttonContainerIcon}
                 onPress={() => navigation.goBack()}
@@ -562,7 +564,7 @@ export default function Cadastro() {
               {required && (
                 <View style={styles.requiredContainer}>
                   <AntDesign
-                    name="exclamationcircleo"
+                    name="warning"
                     size={12}
                     color={Colors.white}
                   />
@@ -599,7 +601,7 @@ export default function Cadastro() {
       case 'senha':
         return (
           <>
-            <View style={styles.header}>
+            <View style={[styles.header, { paddingTop: insets.top }]}>
               <RectButton
                 style={styles.buttonContainerIcon}
                 onPress={() => navigation.goBack()}
@@ -657,7 +659,7 @@ export default function Cadastro() {
                 {isVisible ? (
                   <View style={styles.grid}>
                     <MaterialCommunityIcons
-                      name="checkbox-blank-outline"
+                      name="checkbox-blank"
                       size={24}
                       color={Colors.white}
                       style={{ marginRight: 5 }}
@@ -686,7 +688,7 @@ export default function Cadastro() {
                 }}
               >
                 <AntDesign
-                  name="exclamationcircleo"
+                  name="warning"
                   size={16}
                   color="#FFFFFF"
                   style={{ marginTop: 1 }}
@@ -699,7 +701,7 @@ export default function Cadastro() {
       case 'cpf':
         return (
           <>
-            <View style={styles.header}>
+            <View style={[styles.header, { paddingTop: insets.top }]}>
               <RectButton
                 style={styles.buttonContainerIcon}
                 onPress={() => navigation.goBack()}
@@ -740,7 +742,7 @@ export default function Cadastro() {
             {required && (
               <View style={styles.requiredContainer}>
                 <AntDesign
-                  name="exclamationcircleo"
+                  name="warning"
                   size={18}
                   color={Colors.white}
                 />
@@ -759,7 +761,7 @@ export default function Cadastro() {
               onRequestClose={() => setModalVisibleTermos(false)}
             >
               <View style={styles.pdfContainer}>
-                <View style={styles.header}>
+                <View style={[styles.header, { paddingTop: insets.top }]}>
                   <TouchableOpacity
                     activeOpacity={0.6}
                     style={styles.buttonContainerIcon}
@@ -817,7 +819,7 @@ export default function Cadastro() {
               </View>
             </Modal>
 
-            <View style={styles.header}>
+            <View style={[styles.header, { paddingTop: insets.top }]}>
               <RectButton
                 style={styles.buttonContainerIcon}
                 onPress={() => navigation.goBack()}
@@ -897,7 +899,7 @@ export default function Cadastro() {
                   ) : (
                     <View style={styles.gridTermos}>
                       <MaterialCommunityIcons
-                        name="checkbox-blank-outline"
+                        name="checkbox-blank"
                         size={24}
                         color="#2A3748"
                         style={{ marginRight: 5 }}
@@ -913,7 +915,7 @@ export default function Cadastro() {
               {required && (
                 <View style={styles.requiredContainerTermos}>
                   <AntDesign
-                    name="exclamationcircleo"
+                    name="warning"
                     size={16}
                     color={Colors.red}
                   />
@@ -930,7 +932,7 @@ export default function Cadastro() {
           <>
             <View style={styles.finalizarContainer}>
               <AntDesign
-                name="checkcircleo"
+                name="check"
                 size={50}
                 color="white"
                 style={styles.iconFinalizar}
@@ -953,7 +955,7 @@ export default function Cadastro() {
           <>
             <View style={styles.finalizarContainer}>
               <AntDesign
-                name="closecircleo"
+                name="close"
                 size={50}
                 color="white"
                 style={styles.iconFinalizar}
@@ -1008,18 +1010,21 @@ const styles = StyleSheet.create({
   header: {
     position: 'absolute',
     top: 0,
+    left: 0,
+    right: 0,
     zIndex: 1,
-
-    height: 60,
-    width: screenWidth,
 
     backgroundColor: '#2795BF',
 
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
 
     paddingLeft: 20,
     paddingRight: 20,
+    paddingTop: 0,
+    paddingBottom: 10,
+    minHeight: 60,
   },
   gridHeader: {
     flexDirection: 'row',
@@ -1210,16 +1215,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
   },
   nameContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
     marginTop: 35,
     width: screenWidth - 40,
     maxWidth: 600,
   },
   nameInput: {
-    width: (screenWidth - 60) / 2,
-    maxWidth: 290,
-    marginTop: 0,
+    width: '100%',
+    marginTop: 20,
     fontSize: 20,
     lineHeight: 24,
   },

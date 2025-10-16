@@ -123,7 +123,7 @@ export default function CadastroNome({ route }) {
 
       {required && (
         <View style={styles.requiredContainer}>
-          <AntDesign name="exclamationcircleo" size={14} color="#FFFFFF" />
+          <AntDesign name="warning" size={14} color="#FFFFFF" />
           <Text style={styles.textRequired}>{errorMessage}</Text>
         </View>
       )}

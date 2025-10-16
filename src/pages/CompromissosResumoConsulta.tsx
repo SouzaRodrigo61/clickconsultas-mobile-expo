@@ -166,7 +166,7 @@ export default function CompromissosResumoConsulta({ route }) {
                 >
                   <View style={styles.modalCloseButton}>
                     <Text style={styles.modalCloseButtonText}>Fechar mapa</Text>
-                    <AntDesign name="closecircleo" size={20} color={Colors.blue} />
+                    <AntDesign name="closecircle" size={20} color={Colors.blue} />
                   </View>
                 </TouchableOpacity>
 

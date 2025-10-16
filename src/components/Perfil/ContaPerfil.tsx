@@ -5,6 +5,8 @@ import {
   View,
   Dimensions,
   TouchableOpacity,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 import { RectButton } from "react-native-gesture-handler";
 
@@ -30,10 +32,39 @@ export default function ContaPerfil() {
   const { signOut } = useAuth();
 
   const [firstSelected, secondSelected] = useState(true);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   function select() {
     secondSelected(!firstSelected);
   }
+
+  const handleLogout = () => {
+    Alert.alert(
+      'Desconectar',
+      'Tem certeza que deseja sair da sua conta?',
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel',
+        },
+        {
+          text: 'Sair',
+          style: 'destructive',
+          onPress: async () => {
+            setIsLoggingOut(true);
+            try {
+              setProfile(null);
+              await signOut();
+            } catch (error) {
+              console.log('Erro ao fazer logout:', error);
+            } finally {
+              setIsLoggingOut(false);
+            }
+          },
+        },
+      ]
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -55,17 +86,19 @@ export default function ContaPerfil() {
             Desconectar sua conta
           </Text>
           <RectButton
-            onPress={() => {
-              setProfile(null);
-              signOut();
-            }}
+            onPress={handleLogout}
             style={styles.contaButton}
+            disabled={isLoggingOut}
           >
-            <MaterialCommunityIcons
-              name="logout"
-              size={22}
-              color={Colors.blue}
-            />
+            {isLoggingOut ? (
+              <ActivityIndicator size="small" color={Colors.blue} />
+            ) : (
+              <MaterialCommunityIcons
+                name="logout"
+                size={22}
+                color={Colors.blue}
+              />
+            )}
           </RectButton>
         </View>
       </View>

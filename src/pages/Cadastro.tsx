@@ -38,6 +38,7 @@ export default function Cadastro() {
   const [step, setStep] = useState('nome')
   const [data, setData] = useState({
     nome: { value: '', error: '' },
+    sobrenome: { value: '', error: '' },
     telefone: { value: '', error: '' },
     email: { value: '', error: '' },
     codigo: { value: '', error: '' },
@@ -75,10 +76,20 @@ export default function Cadastro() {
     !test && setErrorMessage(data.nome.error)
     return test
   }
+
+  const apenasLetrasSobrenome = (text) => {
+    const test = /^[a-zA-Z\u00C0-\u017F\s]+$/.test(text.trim())
+    data.sobrenome.error = 'Digite apenas letras, maiúsculas ou minúsculas!'
+    !test && setErrorMessage(data.sobrenome.error)
+    return test
+  }
+
   function validateName() {
     let valid = [
       apenasLetras(data.nome.value), // ! Apenas letras
       naoVazia(data.nome.value), // ! Não permite vazio
+      apenasLetrasSobrenome(data.sobrenome.value), // ! Apenas letras no sobrenome
+      naoVazia(data.sobrenome.value), // ! Não permite vazio no sobrenome
     ].every((e) => e === true)
 
     valid ? (toStep('contato'), setRequired(false)) : setRequired(true)
@@ -246,9 +257,12 @@ export default function Cadastro() {
   const submit = async () => {
     setIsSubmit(true)
 
+    // Unificar nome e sobrenome para envio
+    const nomeCompleto = `${data.nome.value.trim()} ${data.sobrenome.value.trim()}`.trim()
+
     await api
       .post('/pacientes', {
-        nome: data.nome.value,
+        nome: nomeCompleto,
         telefone: data.telefone.value,
         email: data.email.value,
         senha: data.senha.value,
@@ -259,10 +273,27 @@ export default function Cadastro() {
         setIsSubmit(false)
       })
       .catch((err) => {
+        console.log('Erro no cadastro:', err.response?.data || err.message)
+        
+        // Melhorar feedback de erro com mensagens específicas
+        let errorMessage = 'Erro no cadastro!'
+        
+        if (err.response?.data?.message) {
+          errorMessage = err.response.data.message
+        } else if (err.response?.data?.error) {
+          errorMessage = err.response.data.error
+        } else if (err.response?.status === 400) {
+          errorMessage = 'Dados inválidos. Verifique as informações e tente novamente.'
+        } else if (err.response?.status === 409) {
+          errorMessage = 'Email ou CPF já cadastrado. Tente fazer login ou recuperar senha.'
+        } else if (err.response?.status >= 500) {
+          errorMessage = 'Erro interno do servidor. Tente novamente mais tarde.'
+        }
+
         toStep('erro')
         return setData((state) => ({
           ...state,
-          email: { value: data.email.value, error: 'Erro no cadastro!' },
+          email: { value: data.email.value, error: errorMessage },
         }))
       })
   }
@@ -298,14 +329,24 @@ export default function Cadastro() {
             <View style={styles.questionContainer}>
               <Text style={styles.question}>Qual é seu nome?</Text>
             </View>
-            <TextInput
-              placeholder="Entre com nome completo"
-              placeholderTextColor="rgba(255, 255, 255, 0.5)"
-              style={styles.input}
-              onChangeText={(e) => handleChange('nome', e)}
-              value={data.nome.value}
-              maxLength={250}
-            />
+            <View style={styles.nameContainer}>
+              <TextInput
+                placeholder="Nome"
+                placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                style={[styles.input, styles.nameInput]}
+                onChangeText={(e) => handleChange('nome', e)}
+                value={data.nome.value}
+                maxLength={100}
+              />
+              <TextInput
+                placeholder="Sobrenome"
+                placeholderTextColor="rgba(255, 255, 255, 0.5)"
+                style={[styles.input, styles.nameInput]}
+                onChangeText={(e) => handleChange('sobrenome', e)}
+                value={data.sobrenome.value}
+                maxLength={100}
+              />
+            </View>
             {required && (
               <View style={styles.requiredContainer}>
                 <AntDesign
@@ -918,7 +959,9 @@ export default function Cadastro() {
                 style={styles.iconFinalizar}
               />
               <Text style={styles.titleFinalizar}>Erro no cadastro!</Text>
-              <Text style={styles.textFinalizar}>Deseja tentar novamente?</Text>
+              <Text style={styles.textFinalizar}>
+                {data.email.error || 'Deseja tentar novamente?'}
+              </Text>
               <View style={styles.buttonsErro}>
                 <TouchableOpacity
                   style={{
@@ -1165,6 +1208,20 @@ const styles = StyleSheet.create({
     borderBottomColor: 'rgba(255, 255, 255, 0.5)',
     paddingBottom: 5,
     borderBottomWidth: 2,
+  },
+  nameContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 35,
+    width: screenWidth - 40,
+    maxWidth: 600,
+  },
+  nameInput: {
+    width: (screenWidth - 60) / 2,
+    maxWidth: 290,
+    marginTop: 0,
+    fontSize: 20,
+    lineHeight: 24,
   },
 
   containermodal: {

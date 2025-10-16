@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from "../services/api";
+import logoutService from "../services/logoutService";
 
 interface User {
   nome: string;
@@ -34,6 +35,11 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
       setLoading(false);
     }
 
+    // Registrar callback para logout automático
+    logoutService.setLogoutCallback(() => {
+      setUser(null);
+    });
+
     loadStorageData();
   });
 
@@ -47,7 +53,13 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   }
 
   async function signOut() {
+    // Limpar dados do AsyncStorage
     await AsyncStorage.clear();
+    
+    // Limpar headers de autorização da API
+    delete api.defaults.headers.Authorization;
+    
+    // Limpar estado do usuário
     setUser(null);
   }
 

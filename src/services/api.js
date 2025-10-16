@@ -16,16 +16,19 @@ api.interceptors.request.use(async (config) => {
   return config;
 });
 
-// api.interceptors.response.use(
-//   (response) => response,
-//   (error) => {
-//     if (error.response?.status === 403) {
-//       alert('Sua sessão expirou! Faça login novamente para continuar.');
-//       logout();
-//       return window.location.reload();
-//     }
-//     return Promise.reject(error);
-//   },
-// );
+// Interceptor para logout automático em caso de erro de autenticação
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401 || error.response?.status === 403) {
+      console.log('Sessão expirada. Executando logout automático...');
+      
+      // Importar e executar logout automático
+      const logoutService = await import('./logoutService');
+      await logoutService.default.executeLogout();
+    }
+    return Promise.reject(error);
+  },
+);
 
 export default api;

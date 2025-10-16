@@ -23,7 +23,7 @@ export default function City({ setCidade }: CityProps) {
 
   useEffect(() => {
     axios.get("https://servicodados.ibge.gov.br/api/v1/localidades/estados").then((resp) => {
-      setUfs([...resp.data.sort((a, b) => a.sigla > b.sigla)]);
+      setUfs([...resp.data.sort((a, b) => a.sigla.localeCompare(b.sigla))]);
     });
   }, []);
 
@@ -31,7 +31,7 @@ export default function City({ setCidade }: CityProps) {
     axios
       .get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${pickerUf}/municipios`)
       .then((resp) => {
-        setCities([...resp.data]);
+        setCities([...resp.data.sort((a, b) => a.nome.localeCompare(b.nome))]);
       });
   }, [pickerUf]);
 

@@ -8,6 +8,7 @@ import {
   Dimensions 
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import api from "../services/api.js";
 import moment from "moment";
@@ -18,7 +19,8 @@ import StatusBar from "../components/StatusBar";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
-export default function RecuperarSenha2({ route }) {
+export default function RecuperarSenha2({ route }: { route: { params: { email: string } } }) {
+  const insets = useSafeAreaInsets();
   const [codigo, setCodigo] = useState({ value: "", error: "" });
   const [loading, setLoading] = useState<boolean>(false);
   const [time, setTime] = useState<any>({
@@ -99,7 +101,7 @@ export default function RecuperarSenha2({ route }) {
 
       <StatusBar color="#2795BF" barStyle="light-content" />
 
-      <View style={styles.header}>
+      <View style={[styles.header, { paddingTop: insets.top }]}>
         <RectButton
           style={styles.buttonContainerIcon}
           onPress={handleNavigateToEntrar}

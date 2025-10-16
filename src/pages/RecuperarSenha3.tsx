@@ -12,7 +12,7 @@ import StatusBar from "../components/StatusBar";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
-export default function RecuperarSenha3({ route }) {
+export default function RecuperarSenha3({ route }: { route: { params: { email: string; code: string } } }) {
   const [senha, setSenha] = useState({ value: "", error: "" });
   const [loading, setLoading] = useState<boolean>(false);
 

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { RectButton } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
+import type { NavigationProp } from "@react-navigation/native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 
 import api from "../services/api.js";
@@ -22,11 +24,12 @@ import StatusBar from "../components/StatusBar";
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 export default function RecuperarSenha1() {
+  const insets = useSafeAreaInsets();
   const [email, setEmail] = useState({ value: "", error: "" });
   const [modalVisible, setModalVisible] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<any>>();
 
   function handleNavigateToEntrar() {
     navigation.navigate("Entrar");
@@ -60,7 +63,7 @@ export default function RecuperarSenha1() {
     <View style={styles.container}>
       <StatusBar color="#2795BF" barStyle="light-content" />
 
-      <View style={styles.header}>
+      <View style={[styles.header, { paddingTop: insets.top }]}>
         <RectButton
           style={styles.buttonContainerIcon}
           onPress={handleNavigateToEntrar}
@@ -120,7 +123,7 @@ export default function RecuperarSenha1() {
           placeholder="Entre com seu email"
           placeholderTextColor="rgba(255, 255, 255, 0.5)"
           style={styles.input}
-          autoCompleteType="email"
+          autoComplete="email"
           textContentType="emailAddress"
           keyboardType="email-address"
           onChangeText={(e) => setEmail({ value: e, error: "" })}
@@ -137,18 +140,21 @@ const styles = StyleSheet.create({
   header: {
     position: "absolute",
     top: 0,
+    left: 0,
+    right: 0,
     zIndex: 1,
-
-    height: 60,
-    width: screenWidth,
 
     backgroundColor: "#2795BF",
 
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
 
     paddingLeft: 20,
     paddingRight: 20,
+    paddingTop: 0,
+    paddingBottom: 10,
+    minHeight: 60,
   },
 
   gridHeader: {

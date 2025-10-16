@@ -103,7 +103,10 @@ export default function DetalheMedico({ route }) {
         setInfoPaciente(data);
         setLoading(false);
       })
-      .catch(() => {});
+      .catch((error) => {
+        console.error('Erro ao carregar perfil do paciente:', error);
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -234,40 +237,80 @@ export default function DetalheMedico({ route }) {
       if (!valid.every((e) => e === true)) return setLoadingSubmit(false);
     }
 
+    // Validações antes de enviar
+    const nomePaciente = firstSelected ? infoPaciente.nome : infoNovoPaciente.nome;
+    const telefonePaciente = firstSelected ? infoPaciente.telefone : infoNovoPaciente.telefone;
+    const generoPaciente = firstSelected ? infoPaciente.genero : infoNovoPaciente.genero;
+    const emailPaciente = firstSelected ? infoPaciente.email : infoNovoPaciente.email;
+    
+    // Validar campos obrigatórios
+    if (!nomePaciente || nomePaciente.trim() === '') {
+      console.error('Nome do paciente é obrigatório');
+      setLoadingSubmit(false);
+      return;
+    }
+    
+    if (!telefonePaciente || telefonePaciente.trim() === '') {
+      console.error('Telefone do paciente é obrigatório');
+      setLoadingSubmit(false);
+      return;
+    }
+
+    // Validar id_medico
+    const idMedico = route.params.data.id_medico || route.params.id_medico;
+    if (!idMedico) {
+      console.error('ID do médico é obrigatório');
+      console.error('route.params.data:', route.params.data);
+      console.error('route.params:', route.params);
+      setLoadingSubmit(false);
+      return;
+    }
+
+    const payload = {
+      data_consulta: moment(
+        route.params.data.data_consulta,
+        "YYYY-MM-DD HH:mm:ssZZ"
+      ).format("YYYY-MM-DD HH:mm:ssZZ"),
+      modificado_em: moment(new Date()).format("YYYY-MM-DD HH:mm:ssZZ"),
+      status_consulta: "Solicitada",
+      convenio: route.params.data.convenio || null,
+      valor_real: route.params.data.valor_real || 0,
+      nome_paciente: nomePaciente.trim(),
+      telefone_paciente: telefonePaciente.trim(),
+      genero_paciente: generoPaciente || null,
+      nascimento_paciente: firstSelected
+        ? (infoPaciente.nascimento ? moment(infoPaciente.nascimento).format("YYYY-MM-DD") : null)
+        : (infoNovoPaciente.nascimento ? moment(infoNovoPaciente.nascimento, "DD/MM/YYYY").format("YYYY-MM-DD") : null),
+      email_paciente: emailPaciente || null,
+      id_medico: idMedico,
+      id_paciente: infoPaciente.id_paciente || null,
+      id_endereco: route.params.data.id_endereco,
+    };
+
+    console.log('Payload enviado para API:', JSON.stringify(payload, null, 2));
+    console.log('Route params:', route.params);
+
     await api
-      .post("/consult", {
-        data_consulta: moment(
-          route.params.data.data_consulta,
-          "YYYY-MM-DD HH:mm:ssZZ"
-        ).format("YYYY-MM-DD HH:mm:ssZZ"),
-        modificado_em: moment(new Date()).format("YYYY-MM-DD HH:mm:ssZZ"),
-        status_consulta: "Solicitada",
-        convenio: route.params.data.convenio,
-        valor_real: route.params.data.valor_real,
-        nome_paciente: firstSelected
-          ? infoPaciente.nome
-          : infoNovoPaciente.nome,
-        telefone_paciente: firstSelected
-          ? infoPaciente.telefone
-          : infoNovoPaciente.telefone,
-        genero_paciente: firstSelected
-          ? infoPaciente.genero
-          : infoNovoPaciente.genero,
-        nascimento_paciente: firstSelected
-          ? moment(infoPaciente.nascimento)
-          : moment(infoNovoPaciente.nascimento, "DD/MM/YYYY"),
-        email_paciente: firstSelected
-          ? infoPaciente.email
-          : infoNovoPaciente.email,
-        id_medico: route.params.data.id_medico,
-        id_paciente: infoPaciente.id_paciente,
-        id_endereco: route.params.data.id_endereco,
-      })
+      .post("/consult", payload)
       .then((res) => {
         setLoadingSubmit(false);
         handleNavigateToResumoConsulta();
       })
-      .catch(() => {});
+      .catch((error) => {
+        console.error('Erro ao agendar consulta:', error);
+        console.error('Status:', error.response?.status);
+        console.error('Data:', error.response?.data);
+        console.error('Headers:', error.response?.headers);
+        
+        setLoadingSubmit(false);
+        
+        // Mostrar detalhes do erro 422
+        if (error.response?.status === 422) {
+          const validationErrors = error.response?.data;
+          console.error('Erros de validação:', validationErrors);
+          // Aqui você pode mostrar os erros específicos para o usuário
+        }
+      });
   };
 
   return (

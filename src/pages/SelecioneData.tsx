@@ -20,15 +20,23 @@ import Colors from "../styles/Colors";
 import Fonts from "../styles/Fonts";
 import api from "../services/api.js";
 import { getInitials } from "../scripts/helpers";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("screen");
 
 export default function SelecioneData({ route }) {
+  console.log('SelecioneData - route.params:', route.params);
+  console.log('SelecioneData - route.params.id_medico:', route.params.id_medico);
+  
   const [step, setStep] = useState({
     pagamento: false,
     endereco: false,
     data: false
   });
+
+  // Estado para armazenar id_medico persistente
+  const [persistentIdMedico, setPersistentIdMedico] = useState(null);
+  const [persistentValorReal, setPersistentValorReal] = useState(null);
 
   const [infoData, setInfoData] = useState({
     conselho: "",
@@ -78,13 +86,51 @@ export default function SelecioneData({ route }) {
 
   const fetch = async () => {
     setLoading(true);
+    
+    // Tentar recuperar id_medico do AsyncStorage se não estiver nos params
+    let idMedico = route.params.id_medico;
+    if (!idMedico) {
+      try {
+        const storedIdMedico = await AsyncStorage.getItem('current_id_medico');
+        const storedValorReal = await AsyncStorage.getItem('current_valor_real');
+        if (storedIdMedico) {
+          idMedico = parseInt(storedIdMedico);
+          setPersistentIdMedico(idMedico);
+          setPersistentValorReal(storedValorReal ? parseFloat(storedValorReal) : null);
+          console.log('Recuperado do AsyncStorage - id_medico:', idMedico);
+        }
+      } catch (error) {
+        console.error('Erro ao recuperar id_medico do AsyncStorage:', error);
+      }
+    } else {
+      // Salvar id_medico no AsyncStorage para persistência
+      try {
+        await AsyncStorage.setItem('current_id_medico', idMedico.toString());
+        await AsyncStorage.setItem('current_valor_real', route.params.valor_real?.toString() || '');
+        setPersistentIdMedico(idMedico);
+        setPersistentValorReal(route.params.valor_real);
+        console.log('Salvo no AsyncStorage - id_medico:', idMedico);
+      } catch (error) {
+        console.error('Erro ao salvar id_medico no AsyncStorage:', error);
+      }
+    }
+
+    if (!idMedico) {
+      console.error('id_medico não encontrado nem nos params nem no AsyncStorage');
+      setLoading(false);
+      return;
+    }
+
     api
-      .get(`/medicos/${route.params.id_medico}`)
+      .get(`/medicos/${idMedico}`)
       .then(({ data: data }) => {
         setInfoData(data);
         setLoading(false);
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.error('Erro ao carregar dados do médico:', err);
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -108,7 +154,12 @@ export default function SelecioneData({ route }) {
     const valor: number = infoData.valor;
     const convenios: string[] = infoData.convenios;
 
-    navigation.navigate("FormaDePagamento", { convenios, valor });
+    navigation.navigate("FormaDePagamento", { 
+      convenios, 
+      valor,
+      id_medico: route.params.id_medico,
+      valor_real: route.params.valor_real
+    });
   }
 
   const [indexSelecionado, setIndexSelecionado] = useState(0);
@@ -156,7 +207,7 @@ export default function SelecioneData({ route }) {
                         <Image style={styles.imgDoctor} source={{ uri: infoData.avatar || "" }} />
                       ) : (
                         <View style={styles.avatarPlaceholder}>
-                          <Text style={{ fontSize: 24 }}>{getInitials(infoData.nomeCompleto)}</Text>
+                          <Text style={styles.avatarText}>{getInitials(infoData.nomeCompleto)}</Text>
                         </View>
                       )}
                       <View style={styles.firstLayerInfos}>
@@ -203,7 +254,7 @@ export default function SelecioneData({ route }) {
                   <Text style={styles.textTitle}>Alterar forma de pagamento</Text>
                   <View style={styles.containerPagamento}>
                     <AntDesign
-                      name="creditcard"
+                      name="credit-card"
                       size={18}
                       color={Colors.blue}
                       style={{ marginRight: 10 }}
@@ -336,6 +387,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "center",
     backgroundColor: Colors.softGray
+  },
+  avatarText: {
+    fontSize: 24,
+    fontFamily: Fonts.bold,
+    color: Colors.black,
+    textAlign: "center",
   },
   pagamento: {
     alignSelf: "center",

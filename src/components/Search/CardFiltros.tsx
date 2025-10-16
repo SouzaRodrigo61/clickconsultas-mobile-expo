@@ -26,7 +26,7 @@ export default function CardFiltros({ press, filter, color = "default" }: onPres
       >
         <RectButton style={{ ...styles.button }} onPress={press}>
           <Text style={{ ...styles.textButton, color: fontColor }}>{filter}</Text>
-          <AntDesign name="caretdown" size={9} color={fontColor} />
+          <AntDesign name="caret-down" size={9} color={fontColor} />
         </RectButton>
       </View>
     </View>

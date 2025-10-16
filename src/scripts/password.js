@@ -1,6 +1,6 @@
 import React from 'react';
-import {TextInput, View, StyleSheet} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {TextInput, View, StyleSheet, TouchableOpacity} from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
 
 export const Password = props => {
   const [value, onChangeText] = React.useState(props.value);
@@ -17,9 +17,10 @@ export const Password = props => {
         marginVertical: (5),
       }}>
       <View style={styles.container}>
-        <Icon
+        <FontAwesome
           name={'key'}
           color={'#9e9e9e'}
+          size={height}
           style={[styles.icons, {height: height, width: height}]}
         />
         <TextInput
@@ -40,12 +41,14 @@ export const Password = props => {
           placeholder={props.label}
           secureTextEntry={!visible}
         />
-        <Icon
-          name={icon}
-          color={'#9e9e9e'}
-          onPress={() => setVisibility(!visible)}
-          style={[styles.icons, {height: height, width: height}]}
-        />
+        <TouchableOpacity onPress={() => setVisibility(!visible)}>
+          <FontAwesome
+            name={icon}
+            color={'#9e9e9e'}
+            size={height}
+            style={[styles.icons, {height: height, width: height}]}
+          />
+        </TouchableOpacity>
       </View>
       <ShowErrors
         value={value}

@@ -13,7 +13,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
 export default function BuscarLocalidade1() {
   const [data, setData] = useState({
     search: '',
-    picker: '',
+    picker: 'SP', // Valor padrão para São Paulo
     loading: false,
     loadingGeo: false,
   })

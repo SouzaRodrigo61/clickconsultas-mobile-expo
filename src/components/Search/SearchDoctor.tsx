@@ -55,8 +55,12 @@ export default function SearchDoctor({
                     />
                   ) : (
                     <View style={styles.avatarPlaceholder}>
-                      <Text style={{ fontSize: 24 }}>
-                        {getInitials(medico.nome_completo)}
+                      <Text style={styles.avatarText}>
+                        {(() => {
+                          const initials = getInitials(medico.nome_completo);
+                          console.log('Nome:', medico.nome_completo, 'Iniciais:', initials);
+                          return initials || "??";
+                        })()}
                       </Text>
                     </View>
                   )}
@@ -110,12 +114,15 @@ export default function SearchDoctor({
                   <View style={styles.buttonscontainer}>
                     <TouchableOpacity
                       style={styles.buttoncontainerAzul}
-                      onPress={() =>
+                      onPress={() => {
+                        console.log('Objeto medico completo:', medico);
+                        console.log('medico.id_medico:', medico.id_medico);
+                        console.log('medico.id:', medico.id);
                         navigation.navigate("SelecioneData", {
-                          id_medico: medico.id_medico,
+                          id_medico: medico.id_medico || medico.id,
                           valor_real: medico.valor,
-                        })
-                      }
+                        });
+                      }}
                       activeOpacity={0.5}
                     >
                       <Text style={styles.textButton}>Consulta Presencial</Text>
@@ -269,5 +276,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "center",
     backgroundColor: Colors.softGray,
+  },
+  avatarText: {
+    fontSize: 24,
+    fontFamily: Fonts.bold,
+    color: Colors.black,
+    textAlign: "center",
   },
 });

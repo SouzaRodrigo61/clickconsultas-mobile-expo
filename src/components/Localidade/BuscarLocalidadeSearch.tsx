@@ -13,11 +13,11 @@ import {
   View,
 } from 'react-native'
 import { RectButton, TouchableOpacity } from 'react-native-gesture-handler'
-import { Picker } from '@react-native-picker/picker'
 import { useProfile } from '../../contexts/profile'
 import api from '../../services/api'
 import Colors from '../../styles/Colors'
 import Fonts from '../../styles/Fonts'
+import EstadoPicker from './EstadoPicker'
 import { saveLocalidadeOnAsyncStorage } from '../../utils/locationStorage'
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
@@ -55,11 +55,14 @@ export default function BuscarLocalidadeSearch({
       .then((resp) => {
         setUfs([...resp.data.sort((a, b) => a.sigla > b.sigla)])
       })
-      .catch(() => {})
+      .catch((error) => {
+        console.error('Erro ao carregar estados:', error);
+      })
   }, [])
 
   useEffect(() => {
-    if (data.picker.trim() !== '') {
+    if (data.picker && data.picker.trim() !== '') {
+      console.log('Carregando cidades para o estado:', data.picker);
       setData((state) => ({ ...state, loading: true }))
       axios
         .get(
@@ -70,6 +73,11 @@ export default function BuscarLocalidadeSearch({
             .map((city) => city.nome)
             .sort((a, b) => a.localeCompare(b)) // Ignorando acentos
           setCities(cityList)
+          console.log('Cidades carregadas:', cityList.length);
+        })
+        .catch((error) => {
+          console.error('Erro ao carregar cidades:', error);
+          setData((state) => ({ ...state, loading: false }))
         })
     }
   }, [data.picker])
@@ -148,27 +156,14 @@ export default function BuscarLocalidadeSearch({
         >
           <AntDesign name="close" size={20} color="white" />
         </RectButton>
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={data.picker}
-            onValueChange={(itemValue) =>
-              setData((state) => ({ ...state, picker: itemValue }))
-            }
-            style={styles.picker}
-            itemStyle={styles.pickerItem}
-          >
-            <Picker.Item label="UF" value="" />
-            {ufs.map((uf) => (
-              <Picker.Item key={uf.sigla} label={uf.sigla} value={uf.sigla} />
-            ))}
-          </Picker>
-          <MaterialIcons
-            name="chevron-right"
-            size={20}
-            color="white"
-            style={styles.pickerIcon}
-          />
-        </View>
+        <EstadoPicker
+          selectedValue={data.picker}
+          onValueChange={(itemValue) => {
+            console.log('Estado selecionado:', itemValue);
+            setData((state) => ({ ...state, picker: itemValue }));
+          }}
+          estados={ufs}
+        />
         <SearchBar
           searchIcon={false}
           platform="default"
@@ -273,26 +268,5 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     fontFamily: Fonts.bold,
     color: Colors.blue,
-  },
-  pickerContainer: {
-    height: 50,
-    width: 65,
-    justifyContent: 'center',
-    position: 'relative',
-  },
-  picker: {
-    height: 50,
-    width: 65,
-    color: 'white',
-  },
-  pickerItem: {
-    color: 'white',
-    fontSize: 16,
-  },
-  pickerIcon: {
-    position: 'absolute',
-    right: 8,
-    top: 15,
-    transform: [{ rotate: '90deg' }],
   },
 })

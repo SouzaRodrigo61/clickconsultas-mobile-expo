@@ -61,7 +61,7 @@ export default function City({ setCidade }: CityProps) {
             ))}
           </Picker>
           <MaterialIcons
-            name="chevron-right"
+            name="keyboard-arrow-right"
             size={20}
             color="black"
             style={styles.pickerIcon}
@@ -80,7 +80,7 @@ export default function City({ setCidade }: CityProps) {
             ))}
           </Picker>
           <MaterialIcons
-            name="chevron-right"
+            name="keyboard-arrow-right"
             size={20}
             color="black"
             style={styles.pickerIcon}

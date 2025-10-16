@@ -14,7 +14,7 @@ export default function DoctorHeader({ consulta }) {
           <Image style={styles.imgDoctor} source={{ uri: consulta.avatar?.file_url }} />
         ) : (
           <View style={styles.avatarPlaceholder}>
-            <Text>{getInitials(consulta.nome_completo)}</Text>
+            <Text style={styles.avatarText}>{getInitials(consulta.nome_completo)}</Text>
           </View>
         )}
 
@@ -76,6 +76,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: Colors.softGray
+  },
+  avatarText: {
+    fontSize: 18,
+    fontFamily: Fonts.bold,
+    color: Colors.black,
+    textAlign: "center",
   },
   doctorheader: {
     width: screenWidth - 40,

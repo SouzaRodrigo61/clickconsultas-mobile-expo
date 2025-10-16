@@ -78,7 +78,7 @@ export default function SecondSelected({
       />
       {error.nome.error && (
         <View style={styles.requiredContainer}>
-          <AntDesign name="exclamationcircleo" size={14} color={Colors.red} />
+          <AntDesign name="exclamation-circle" size={14} color={Colors.red} />
           <Text style={styles.textRequired}>{error.nome.message}</Text>
         </View>
       )}
@@ -102,7 +102,7 @@ export default function SecondSelected({
 
       {error.telefone.error && (
         <View style={styles.requiredContainer}>
-          <AntDesign name="exclamationcircleo" size={14} color={Colors.red} />
+          <AntDesign name="exclamation-circle" size={14} color={Colors.red} />
           <Text style={styles.textRequired}>{error.telefone.message}</Text>
         </View>
       )}
@@ -172,7 +172,7 @@ export default function SecondSelected({
       />
       {error.email.error && (
         <View style={styles.requiredContainer}>
-          <AntDesign name="exclamationcircleo" size={14} color={Colors.red} />
+          <AntDesign name="exclamation-circle" size={14} color={Colors.red} />
           <Text style={styles.textRequired}>{error.email.message}</Text>
         </View>
       )}

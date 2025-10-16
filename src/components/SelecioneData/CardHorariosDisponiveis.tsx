@@ -13,14 +13,14 @@ import Colors from "../../styles/Colors";
 import Fonts from "../../styles/Fonts";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import CustomDatePicker from "./CustomDatePicker";
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 import { useNavigation } from "@react-navigation/native";
-import Moment from "moment";
+import moment from "moment";
 import "moment/locale/pt-br";
 import { extendMoment } from "moment-range";
 
-const moment = extendMoment(Moment);
+const momentExtended = extendMoment(moment);
 
 interface Data {
   atendimento: any;
@@ -67,6 +67,10 @@ export default function CardHorariosDisponiveis({
       index,
       convenio
     };
+    
+    console.log('Navegando para DetalhePaciente com data:', data);
+    console.log('id_medico sendo passado:', id_medico);
+    
     navigation.navigate("DetalhePaciente", { data });
   }
 
@@ -104,9 +108,13 @@ export default function CardHorariosDisponiveis({
       setDatePickerVisibility(false);
     };
 
-    const handleConfirm = (date: any) => {
-      setDateDisplay(date);
-      setStep((state) => ({ ...state, data: true }));
+    const handleConfirm = (date: Date) => {
+      try {
+        setDateDisplay(moment(date));
+        setStep((state) => ({ ...state, data: true }));
+      } catch (error) {
+        console.error('Erro ao confirmar data:', error);
+      }
     };
 
     return (
@@ -120,7 +128,7 @@ export default function CardHorariosDisponiveis({
             disabled={!endereco}
             onPress={showDatePicker}
           >
-            <MaterialIcons name="date-range" size={23} color={Colors.blue} />
+            <MaterialIcons name="event" size={23} color={Colors.blue} />
             <View style={styles.dateButtonTextContainer}>
               {!data ? (
                 <Text style={{ ...styles.textDateButton, textTransform: "none" }}>
@@ -128,17 +136,18 @@ export default function CardHorariosDisponiveis({
                 </Text>
               ) : (
                 <Text style={styles.textDateButton}>
-                  {moment(dateDisplay).format("dddd" + ", DD" + " MMM")}
+                  {dateDisplay ? moment(dateDisplay).format("dddd" + ", DD" + " MMM") : "Data inválida"}
                 </Text>
               )}
             </View>
           </TouchableOpacity>
-          <DateTimePickerModal
+          <CustomDatePicker
             isVisible={isDatePickerVisible}
-            mode="date"
             onConfirm={handleConfirm}
             onCancel={hideDatePicker}
             minimumDate={new Date()}
+            maximumDate={moment().add(1, 'year').toDate()}
+            selectedDate={dateDisplay ? dateDisplay.toDate() : new Date()}
           />
         </View>
         <View

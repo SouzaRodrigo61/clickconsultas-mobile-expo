@@ -49,11 +49,11 @@ export default function Especialidades({ slice, especialidades }: Props) {
                 <View style={styles.cardContent}>
                   {index % 2 ? (
                     <View style={styles.darkBlueIcon}>
-                      <FontAwesome name="stethoscope" size={24} color="white" />
+                      <FontAwesome name="user-md" size={24} color="white" />
                     </View>
                   ) : (
                     <View style={styles.blueIcon}>
-                      <FontAwesome name="stethoscope" size={24} color="white" />
+                      <FontAwesome name="user-md" size={24} color="white" />
                     </View>
                   )}
                   <Text style={styles.text}>{tipoEspecialidade}</Text>

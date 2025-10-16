@@ -23,7 +23,11 @@ export default function FormaDePagamento({ route }) {
   const navigation = useNavigation();
 
   function handleNavigate(convenioSelecionado) {
-    navigation.navigate("SelecioneData", { convenioSelecionado });
+    // Manter os parâmetros originais e adicionar o convenioSelecionado
+    navigation.navigate("SelecioneData", { 
+      ...route.params,
+      convenioSelecionado 
+    });
   }
 
   return (

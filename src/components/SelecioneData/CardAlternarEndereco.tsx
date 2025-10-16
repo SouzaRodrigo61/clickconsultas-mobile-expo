@@ -42,7 +42,7 @@ export default function CardAlternarEndereco({
       <View style={{ opacity: pagamento ? 1 : 0.4 }}>
         <Text style={styles.textTitle}>Alterar endereço</Text>
         <View style={styles.containerEndereco}>
-          <MaterialIcons name="location-pin" size={24} color={Colors.blue} />
+          <MaterialIcons name="place" size={24} color={Colors.blue} />
           {loading ? (
             <ActivityIndicator size="small" color={Colors.blue} />
           ) : (

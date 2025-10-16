@@ -1,4 +1,4 @@
-import { EvilIcons } from '@expo/vector-icons'
+import { AntDesign } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 import React from 'react'
 import {
@@ -100,7 +100,7 @@ export default function CardMaisSobre({
               onPress={handlePressEspecialidades}
             >
               <Text style={styles.textSecondLayer}>Especialidades</Text>
-              <EvilIcons name="chevron-right" size={24} color="black" />
+              <AntDesign name="right" size={24} color="black" />
             </RectButton>
           )}
         </View>
@@ -113,7 +113,7 @@ export default function CardMaisSobre({
               onPress={handlePressEducacao}
             >
               <Text style={styles.textSecondLayer}>Formações</Text>
-              <EvilIcons name="chevron-right" size={24} color="black" />
+              <AntDesign name="right" size={24} color="black" />
             </RectButton>
           )}
         </View>
@@ -126,7 +126,7 @@ export default function CardMaisSobre({
               onPress={handlePressExperiencia}
             >
               <Text style={styles.textSecondLayer}>Experiência</Text>
-              <EvilIcons name="chevron-right" size={24} color="black" />
+              <AntDesign name="right" size={24} color="black" />
             </RectButton>
           )}
         </View>

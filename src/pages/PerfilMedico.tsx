@@ -71,7 +71,10 @@ export default function PerfilMedico({ route }) {
         setInfoMedico(medico);
         setLoading(false);
       })
-      .catch(() => {});
+      .catch((error) => {
+        console.error('Erro ao carregar perfil do médico:', error);
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -101,7 +104,7 @@ export default function PerfilMedico({ route }) {
                       <Image style={styles.imgDoctor} source={{ uri: infoMedico.avatar || "" }} />
                     ) : (
                       <View style={styles.avatarPlaceholder}>
-                        <Text style={{ fontSize: 24 }}>{getInitials(infoMedico.nomeCompleto)}</Text>
+                        <Text style={styles.avatarText}>{getInitials(infoMedico.nomeCompleto)}</Text>
                       </View>
                     )}
                     <View style={styles.firstLayerInfos}>
@@ -264,5 +267,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "center",
     backgroundColor: Colors.softGray
+  },
+  avatarText: {
+    fontSize: 24,
+    fontFamily: Fonts.bold,
+    color: Colors.black,
+    textAlign: "center",
   }
 });

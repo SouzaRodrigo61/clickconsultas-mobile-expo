@@ -6,6 +6,7 @@ import Routes from "./src/routes/";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useFonts, loadAsync } from "expo-font";
+import * as SplashScreen from 'expo-splash-screen';
 
 import {
   Roboto_400Regular,
@@ -27,6 +28,9 @@ import {
 } from "@expo-google-fonts/lato";
 import moment from "moment";
 
+// Manter a splash screen visível enquanto carrega as fontes
+SplashScreen.preventAutoHideAsync();
+
 export default function App() {
   let [fontsLoaded] = useFonts({
     Roboto_400Regular,
@@ -44,6 +48,12 @@ export default function App() {
     Lato_900Black,
     Lato_900Black_Italic,
   });
+
+  React.useEffect(() => {
+    if (fontsLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
 
   if (!fontsLoaded) {
     return null;

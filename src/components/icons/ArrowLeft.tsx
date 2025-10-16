@@ -13,7 +13,7 @@ export default function ArrowLeft({ colorIcon }: ArrowLeftIconProps) {
 
   return (
     <RectButton style={styles.buttoncontainer} onPress={() => navigation.goBack()}>
-      <AntDesign name="arrowleft" size={19.5} color={colorIcon} />
+      <AntDesign name="arrow-left" size={19.5} color={colorIcon} />
     </RectButton>
   );
 }

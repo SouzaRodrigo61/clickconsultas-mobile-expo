@@ -32,6 +32,9 @@ import moment from "moment";
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
+  console.log('App: Componente inicializado');
+  console.log('App: Verificando se está executando...');
+  
   let [fontsLoaded] = useFonts({
     Roboto_400Regular,
     Roboto_500Medium,

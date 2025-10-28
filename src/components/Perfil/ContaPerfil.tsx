@@ -53,10 +53,25 @@ export default function ContaPerfil() {
           onPress: async () => {
             setIsLoggingOut(true);
             try {
+              console.log('ContaPerfil: Iniciando logout...');
+              
+              // Limpar profile primeiro
               setProfile(null);
+              console.log('ContaPerfil: Profile limpo');
+              
+              // Pequeno delay para Android
+              await new Promise(resolve => setTimeout(resolve, 100));
+              
+              // Fazer logout
               await signOut();
+              console.log('ContaPerfil: Logout concluído');
+              
+              // Delay adicional para Android garantir que a navegação funcione
+              await new Promise(resolve => setTimeout(resolve, 200));
+              
             } catch (error) {
-              console.log('Erro ao fazer logout:', error);
+              console.error('ContaPerfil: Erro ao fazer logout:', error);
+              Alert.alert('Erro', 'Ocorreu um erro ao sair da conta. Tente novamente.');
             } finally {
               setIsLoggingOut(false);
             }

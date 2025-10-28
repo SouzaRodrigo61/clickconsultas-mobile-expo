@@ -62,7 +62,8 @@ export default function BuscarLocalidadeSearch({
 
   useEffect(() => {
     if (data.picker && data.picker.trim() !== '') {
-      console.log('Carregando cidades para o estado:', data.picker);
+      console.log('BuscarLocalidadeSearch: Carregando cidades para o estado:', data.picker);
+      console.log('BuscarLocalidadeSearch: Estado atual do data:', data);
       setData((state) => ({ ...state, loading: true }))
       axios
         .get(
@@ -73,25 +74,19 @@ export default function BuscarLocalidadeSearch({
             .map((city) => city.nome)
             .sort((a, b) => a.localeCompare(b)) // Ignorando acentos
           setCities(cityList)
-          console.log('Cidades carregadas:', cityList.length);
+          console.log('BuscarLocalidadeSearch: Cidades carregadas:', cityList.length);
+          setData((state) => ({ ...state, loading: false }))
         })
         .catch((error) => {
-          console.error('Erro ao carregar cidades:', error);
+          console.error('BuscarLocalidadeSearch: Erro ao carregar cidades:', error);
           setData((state) => ({ ...state, loading: false }))
         })
     }
   }, [data.picker])
 
   useEffect(() => {
-    let isMounted = true
-
-    if (isMounted) {
-      setData((state) => ({ ...state, loading: false }))
+    if (cities.length > 0) {
       setSearchResult(cities)
-    }
-
-    return () => {
-      isMounted = false
     }
   }, [cities])
 
@@ -108,6 +103,8 @@ export default function BuscarLocalidadeSearch({
   }
 
   async function handleCurrentLocation() {
+    console.log('=== USANDO LOCALIZAÇÃO ATUAL ===');
+    
     let { status } = await Location.requestForegroundPermissionsAsync()
     if (status !== 'granted') {
       console.log('Permission to access location was denied')
@@ -118,13 +115,15 @@ export default function BuscarLocalidadeSearch({
 
     let location = await Location.getCurrentPositionAsync({})
 
-    console.log(location)
+    console.log('Localização obtida:', location)
 
     api
       .post('/city-uf', {
         search: [location.coords.latitude, location.coords.longitude].join(','),
       })
       .then(async ({ data }) => {
+        console.log('Resposta da API city-uf:', data);
+        
         if (data.estado && data.estado.trim() !== '') {
           const localidade = {
             cidade: data.cidade,
@@ -133,12 +132,27 @@ export default function BuscarLocalidadeSearch({
             long: location.coords.longitude,
           }
 
+          console.log('Localidade criada:', localidade);
+
           setData((state) => ({ ...state, loadingGeo: false }))
-          setProfile((state: any) => ({
-            ...state,
-            localidade,
-          }))
+          setProfile((state: any) => {
+            const newState = {
+              ...state,
+              localidade,
+            };
+            console.log('Novo estado do profile:', newState);
+            return newState;
+          })
           await saveLocalidadeOnAsyncStorage(localidade)
+          console.log('Localidade salva no AsyncStorage');
+
+          // Salvar cidade no perfil do paciente no backend
+          try {
+            await api.put("/pacientes/profile", { cidade: data.cidade });
+            console.log('Cidade salva no perfil do paciente');
+          } catch (error) {
+            console.log('Erro ao salvar cidade no perfil:', error);
+          }
 
           navigation.navigate('Home')
         }

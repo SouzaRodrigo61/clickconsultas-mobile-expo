@@ -10,7 +10,8 @@ import {
   TouchableOpacity,
   Dimensions,
   RefreshControl,
-  ImageBackground
+  ImageBackground,
+  Alert
 } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
@@ -30,8 +31,6 @@ import ColorfulLogo from "../images/colorful-logo.png";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
-import { getLocalidadeFromAsyncStorage } from "../utils/locationStorage.js";
-
 import { useAuth } from "../contexts/auth";
 import { useProfile } from "../contexts/profile";
 
@@ -44,6 +43,19 @@ export default function Home({}) {
   const [solicitaData, setSolicitaData] = useState(false);
   const [loading, setLoading] = useState(true);
   const localSelected = profile?.localidade?.cidade || "";
+
+  // Log para debug da localidade
+  useEffect(() => {
+    console.log('Home: ===== PROFILE ATUALIZADO =====');
+    console.log('Home: Profile atualizado:', {
+      hasProfile: !!profile,
+      hasLocalidade: !!profile?.localidade,
+      localidade: profile?.localidade,
+      localSelected: localSelected
+    });
+    console.log('Home: ===== FIM PROFILE ATUALIZADO =====');
+  }, [profile, localSelected]);
+
 
   function handleNavigateToEncontreAgende() {
     navigation.navigate("EncontreAgende", {
@@ -72,12 +84,6 @@ export default function Home({}) {
     await api
       .get("/pacientes/appointments")
       .then(({ data: compromissos }) => setSolicitaData(compromissos.find((c) => c.is_remarcacao)));
-    const localidade = await getLocalidadeFromAsyncStorage();
-    if (localidade)
-      setProfile((state: any) => ({
-        ...state,
-        localidade
-      }));
     setLoading(false);
   };
 

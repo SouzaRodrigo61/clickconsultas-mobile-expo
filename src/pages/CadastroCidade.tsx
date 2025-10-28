@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -23,25 +23,90 @@ import { useProfile } from "../contexts/profile";
 
 export default function CadastroCidade({ route }) {
   const navigation = useNavigation();
-  const { profile, setProfile } = useProfile();
-  const [city, setCity] = useState<any>(profile?.cidade || "");
+  const { profile, setProfile, clearProfileCache } = useProfile();
+  const [city, setCity] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+
+  // Valores iniciais do perfil
+  const initialUf = profile?.localidade?.estado || "";
+  const initialCity = profile?.localidade?.cidade || "";
+
+  console.log('CadastroCidade: Valores iniciais do perfil:', {
+    initialUf,
+    initialCity,
+    profile: profile?.localidade,
+    cidadeBackend: profile?.cidade
+  });
+
+  // Inicializar city quando perfil carregar
+  useEffect(() => {
+    if (profile?.localidade?.estado && profile?.localidade?.cidade) {
+      console.log('CadastroCidade: Inicializando city com perfil:', [profile.localidade.estado, profile.localidade.cidade]);
+      setCity([profile.localidade.estado, profile.localidade.cidade]);
+    }
+  }, [profile?.localidade]);
+
   function handleNavigateToPerfil() {
     navigation.navigate("Perfil");
   }
 
+  // Função temporária para testar correção
+  async function handleFixBrasilia() {
+    console.log('CadastroCidade: Forçando correção de Brasília...');
+    await clearProfileCache();
+    // Recarregar a página
+    setTimeout(() => {
+      navigation.replace("CadastroCidade");
+    }, 1000);
+  }
+
   async function handleSubmit() {
-    if (profile?.cidade === city[1]) handleNavigateToPerfil();
+    console.log('CadastroCidade: Submetendo cidade:', city);
+    
+    if (!city || !city[0] || !city[1]) {
+      setErrorMessage("Por favor, selecione um estado e uma cidade");
+      return;
+    }
+    
+    if (profile?.cidade === city[1]) {
+      console.log('CadastroCidade: Cidade já é a mesma, navegando...');
+      handleNavigateToPerfil();
+      return;
+    }
+    
     setLoading(true);
-    await api
-      .put("/pacientes/profile", { cidade: city[1] })
-      .then(() => {
-        setProfile((state: any) => ({ ...state, cidade: city[1] }));
-        handleNavigateToPerfil();
-      })
-      .catch(() => setErrorMessage("Erro ao atualizar cidade!"));
-    setLoading(false);
+    setErrorMessage("");
+    
+    try {
+      console.log('CadastroCidade: Salvando cidade no backend:', city[1]);
+      await api.put("/pacientes/profile", { cidade: city[1] });
+      
+      console.log('CadastroCidade: Atualizando profile com localidade:', {
+        cidade: city[1],
+        estado: city[0]
+      });
+      
+      setProfile((state: any) => ({ 
+        ...state, 
+        cidade: city[1],
+        localidade: {
+          ...state.localidade,
+          cidade: city[1],
+          estado: city[0],
+          lat: '',
+          long: ''
+        }
+      }));
+      
+      console.log('CadastroCidade: Navegando para perfil...');
+      handleNavigateToPerfil();
+    } catch (error) {
+      console.error('CadastroCidade: Erro ao salvar cidade:', error);
+      setErrorMessage("Erro ao salvar cidade. Tente novamente.");
+    } finally {
+      setLoading(false);
+    }
   }
   return (
     <SafeAreaWrapper>
@@ -71,9 +136,24 @@ export default function CadastroCidade({ route }) {
 
       <View style={styles.textContainer}>
         <Text style={styles.text}>Em que cidade você mora?</Text>
+        {errorMessage ? (
+          <Text style={styles.errorText}>{errorMessage}</Text>
+        ) : null}
       </View>
 
-      <CityComponent setCidade={setCity} />
+      <CityComponent 
+        setCidade={setCity} 
+        initialUf={initialUf}
+        initialCity={initialCity}
+      />
+      
+      {/* Botão temporário para testar correção */}
+      {profile?.localidade?.cidade?.toLowerCase().includes('brasília') && 
+       profile?.localidade?.estado === 'SP' && (
+        <RectButton style={styles.fixButton} onPress={handleFixBrasilia}>
+          <Text style={styles.fixButtonText}>🔧 Corrigir Brasília para DF</Text>
+        </RectButton>
+      )}
       </View>
     </SafeAreaWrapper>
   );
@@ -153,5 +233,25 @@ const styles = StyleSheet.create({
     color: Colors.white,
     textAlign: "right",
     textTransform: "uppercase",
+  },
+
+  errorText: {
+    fontSize: 16,
+    fontFamily: Fonts.regular,
+    color: "#FF6B6B",
+    textAlign: "center",
+    marginTop: 10,
+  },
+  fixButton: {
+    backgroundColor: "#FF6B6B",
+    padding: 15,
+    borderRadius: 8,
+    margin: 20,
+    alignItems: "center",
+  },
+  fixButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontFamily: Fonts.bold,
   },
 });

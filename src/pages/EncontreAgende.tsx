@@ -258,7 +258,7 @@ export default function EncontreAgende({ route }) {
               }}
               lightTheme={true}
               searchIcon={
-                <AntDesign name="search1" size={18} color={Colors.softGray} />
+                <AntDesign name="search" size={18} color={Colors.softGray} />
               }
               onClear={handleCancel}
               clearIcon={

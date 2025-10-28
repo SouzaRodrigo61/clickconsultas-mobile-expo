@@ -22,7 +22,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.clickconsultasinc.clickconsultas",
-      "buildNumber": "1.0.0",
+      "buildNumber": "26",
       "infoPlist": {
         "NSAppTransportSecurity": {
           "NSAllowsArbitraryLoads": true
@@ -32,7 +32,7 @@
     "android": {
       "package": "com.clickconsultasinc.clickconsultas",
       "googleServicesFile": "./google-services.json",
-      "versionCode": 25,
+      "versionCode": 26,
       "permissions": [
         "INTERNET",
         "ACCESS_NETWORK_STATE"

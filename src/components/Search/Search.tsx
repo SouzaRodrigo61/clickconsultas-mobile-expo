@@ -100,7 +100,7 @@ export default function Search({
           elevation: 0.5
         }}
         lightTheme={true}
-        searchIcon={<AntDesign name="search1" size={18} color={Colors.softGray} />}
+        searchIcon={<AntDesign name="search" size={18} color={Colors.softGray} />}
         onClear={handleCancel}
         clearIcon={<AntDesign name="close" size={20} color={Colors.softGray} />}
         onChangeText={handleChangeText}

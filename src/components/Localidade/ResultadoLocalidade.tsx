@@ -36,6 +36,10 @@ export default function ResultadoLocalidade({ searchResult, data, setData }: Sea
   const navigation = useNavigation();
 
   const handleSetLocation = async (local) => {
+    console.log('=== SELECIONANDO LOCALIZAÇÃO ===');
+    console.log('Cidade selecionada:', local);
+    console.log('Estado selecionado:', data.picker);
+    
     setLoading(true);
     await api
       .post("/coordinates", {
@@ -49,17 +53,32 @@ export default function ResultadoLocalidade({ searchResult, data, setData }: Sea
           long: coordinates.split(",")[1]
         };
 
-        setProfile((state: any) => ({
-          ...state,
-          localidade
-        }));
+        console.log('Localidade criada:', localidade);
+
+        setProfile((state: any) => {
+          const newState = {
+            ...state,
+            localidade
+          };
+          console.log('Novo estado do profile:', newState);
+          return newState;
+        });
 
         await saveLocalidadeOnAsyncStorage(localidade);
+        console.log('Localidade salva no AsyncStorage');
+
+        // Salvar cidade no perfil do paciente no backend
+        try {
+          await api.put("/pacientes/profile", { cidade: local });
+          console.log('Cidade salva no perfil do paciente');
+        } catch (error) {
+          console.log('Erro ao salvar cidade no perfil:', error);
+        }
 
         navigation.navigate("Home");
       })
       .catch((err) => {
-        console.log(err);
+        console.log('Erro ao salvar localização:', err);
       })
       .finally(() => {
         setLoading(false);

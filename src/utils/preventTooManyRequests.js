@@ -19,18 +19,23 @@ const makeRequestCreator = () => {
         // Return result if it exists
         return resources[query];
       }
-      const res = await api(query, { cancelToken: cancel.token });
+      // Usar api.get para garantir que interceptors funcionem corretamente
+      const res = await api.get(query, { cancelToken: cancel.token });
 
-      const response = await res?.data;
+      const response = res?.data;
       // Store response
-      resources[query] = response;
+      resources[query] = res;
 
-      return response;
+      return res;
     } catch (error) {
       if (axios.isCancel(error)) {
-        // Handle if request was cancelled
+        // Se foi cancelado, não relançar o erro
+        console.log('Request cancelado:', query);
+        throw error; // Relançar para indicar que foi cancelado
       } else {
-        // Handle usual errors
+        // Relançar erros para que interceptors (como o de 401/403) funcionem
+        console.error('Erro na requisição:', query, error.response?.status || error.message);
+        throw error;
       }
     }
   };

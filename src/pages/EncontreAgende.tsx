@@ -27,6 +27,7 @@ import ModalOrdem from '../components/Search/ModalOrdem'
 import SearchDoctor from '../components/Search/SearchDoctor'
 import ArrowLeftButton from '../components/icons/ArrowLeft'
 import { useProfile } from '../contexts/profile'
+import { useAuth } from '../contexts/auth'
 import { request } from '../utils/preventTooManyRequests.js'
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('window')
@@ -41,6 +42,7 @@ export default function EncontreAgende({ route }) {
   const [modalLocalidadeVisible, setModalLocalidadeVisible] = useState(false)
 
   const { profile } = useProfile()
+  const { signed } = useAuth()
 
   // shows SearchComponent
   const [show, setShow] = useState<boolean>(true)
@@ -112,23 +114,59 @@ export default function EncontreAgende({ route }) {
 
   const fetch = async () => {
     if (search.trim() === '') return
-    setLoading(true)
-
-    const params = {
-      lat: `${profile?.localidade.lat}`,
-      long: `${profile?.localidade.long}`,
-      radius: `${radius}`,
-      nome: search,
-      order: order,
+    
+    // Verificar se usuário está autenticado
+    if (!signed) {
+      console.log('EncontreAgende: Usuário não autenticado, abortando busca');
+      setLoading(false);
+      setSearchResult([]);
+      return;
     }
 
-    const res = await request(
-      `/list-medicos/?${new URLSearchParams(params).toString()}`,
-    )
-    const novosMedicos = await res?.data
+    // Verificar se há localidade e coordenadas
+    if (!profile?.localidade || !profile?.localidade.lat || !profile?.localidade.long) {
+      console.log('EncontreAgende: Localidade ou coordenadas não disponíveis');
+      setLoading(false);
+      setSearchResult([]);
+      setModalLocalidadeVisible(true);
+      return;
+    }
 
-    setSearchResult(novosMedicos)
-    setLoading(false)
+    setLoading(true)
+
+    try {
+      const params = {
+        lat: `${profile.localidade.lat}`,
+        long: `${profile.localidade.long}`,
+        radius: `${radius}`,
+        nome: search,
+        order: order,
+      }
+
+      const res = await request(
+        `/list-medicos/?${new URLSearchParams(params).toString()}`,
+      )
+      
+      if (res && res.data) {
+        const novosMedicos = res.data
+        setSearchResult(novosMedicos || [])
+      } else {
+        setSearchResult([])
+      }
+    } catch (error) {
+      console.error('EncontreAgende: Erro ao buscar médicos:', error);
+      
+      // Erro de autenticação (401/403) será tratado pelo interceptor
+      // Aqui apenas garantimos que o loading seja finalizado
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        console.log('EncontreAgende: Erro de autenticação detectado');
+        // O interceptor vai fazer logout automático
+      }
+      
+      setSearchResult([])
+    } finally {
+      setLoading(false)
+    }
   }
 
   useEffect(() => {

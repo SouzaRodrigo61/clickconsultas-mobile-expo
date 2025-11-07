@@ -32,7 +32,7 @@
     "android": {
       "package": "com.clickconsultasinc.clickconsultas",
       "googleServicesFile": "./google-services.json",
-      "versionCode": 26,
+      "versionCode": 27,
       "permissions": [
         "INTERNET",
         "ACCESS_NETWORK_STATE"

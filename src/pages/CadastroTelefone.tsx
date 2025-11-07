@@ -39,6 +39,7 @@ export default function CadastroTelefone({ route }) {
 
     setLoading(true);
     const tamanhoEntre = (min, max) => (text) => {
+      if (!text) return false;
       const test = text.length >= min && text.length <= max;
       !test && setErrorMessage("Digite um numero válido!");
       return test;
@@ -62,7 +63,10 @@ export default function CadastroTelefone({ route }) {
           setProfile((state: any) => ({ ...state, telefone: phone }));
           handleNavigateToPerfil();
         })
-        .catch(() => setErrorMessage("Erro ao atualizar telefone!"));
+        .catch(() => {
+          setErrorMessage("Erro ao atualizar telefone!");
+          setRequired(true);
+        });
     else {
       setRequired(true);
     }

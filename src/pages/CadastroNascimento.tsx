@@ -10,7 +10,10 @@ import { AntDesign } from "@expo/vector-icons";
 import { RectButton } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import moment from "moment";
-import "moment/locale/pt-br";
+// Importação condicional do locale para evitar erros nos testes
+if (typeof jest === 'undefined') {
+  require("moment/locale/pt-br");
+}
 import api from "../services/api.js";
 
 import DateComponent from "../components/CadastroNascimento/Date";

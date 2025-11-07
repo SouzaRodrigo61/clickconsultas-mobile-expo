@@ -43,7 +43,10 @@ export default function CadastroGenero({ route }) {
         setProfile((state: any) => ({ ...state, genero: gender }));
         handleNavigateToPerfil();
       })
-      .catch(() => setErrorMessage("Erro ao atualizar gênero!"));
+      .catch(() => {
+        setErrorMessage("Erro ao atualizar gênero!");
+        setRequired(true);
+      });
 
     setLoading(false);
   }
@@ -76,6 +79,12 @@ export default function CadastroGenero({ route }) {
         <Text style={styles.text}>Qual é o seu gênero?</Text>
       </View>
       <GenderComponent setGenero={setGender} gender={gender} />
+      {required && (
+        <View style={styles.requiredContainer}>
+          <AntDesign name="warning" size={14} color="#FFFFFF" />
+          <Text style={styles.textRequired}>{errorMessage}</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -155,5 +164,24 @@ const styles = StyleSheet.create({
     color: Colors.white,
     textAlign: "right",
     textTransform: "uppercase",
+  },
+
+  requiredContainer: {
+    width: screenWidth - 40,
+    maxWidth: 600,
+    flexDirection: "row",
+    marginTop: 20,
+    alignItems: "center",
+    position: "absolute",
+    bottom: screenHeight / 3 + 20,
+  },
+
+  textRequired: {
+    fontFamily: Fonts.bold,
+    fontStyle: "normal",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#FFFFFF",
+    marginLeft: 6,
   },
 });

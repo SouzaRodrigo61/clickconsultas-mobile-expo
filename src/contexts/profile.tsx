@@ -75,11 +75,32 @@ const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
             search: `${profileData.cidade}, brazil`
           });
           
+          const estado = geoData.estado || 'SP';
+          
+          // Buscar coordenadas para a cidade
+          let lat = '';
+          let long = '';
+          try {
+            console.log('Profile: Buscando coordenadas para cidade:', profileData.cidade, estado);
+            const { data: coordinates } = await api.post('/coordinates', {
+              search: `${profileData.cidade}, ${estado}, brazil`
+            });
+            
+            if (coordinates && typeof coordinates === 'string' && coordinates.includes(',')) {
+              const coords = coordinates.split(',');
+              lat = coords[0].trim();
+              long = coords[1].trim();
+              console.log('Profile: Coordenadas obtidas:', { lat, long });
+            }
+          } catch (coordError) {
+            console.log('Profile: Erro ao obter coordenadas, usando valores vazios:', coordError);
+          }
+          
           localidade = {
             cidade: profileData.cidade,
-            estado: geoData.estado || 'SP',
-            lat: '',
-            long: ''
+            estado: estado,
+            lat: lat,
+            long: long
           };
           
           console.log('Profile: Localidade obtida via geocoding:', localidade);
@@ -112,11 +133,30 @@ const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ children }) 
             estadoPadrao = 'GO';
           }
           
+          // Tentar obter coordenadas mesmo com mapeamento local
+          let lat = '';
+          let long = '';
+          try {
+            console.log('Profile: Buscando coordenadas para cidade (mapeamento local):', profileData.cidade, estadoPadrao);
+            const { data: coordinates } = await api.post('/coordinates', {
+              search: `${profileData.cidade}, ${estadoPadrao}, brazil`
+            });
+            
+            if (coordinates && typeof coordinates === 'string' && coordinates.includes(',')) {
+              const coords = coordinates.split(',');
+              lat = coords[0].trim();
+              long = coords[1].trim();
+              console.log('Profile: Coordenadas obtidas (mapeamento local):', { lat, long });
+            }
+          } catch (coordError) {
+            console.log('Profile: Erro ao obter coordenadas (mapeamento local), usando valores vazios:', coordError);
+          }
+          
           localidade = {
             cidade: profileData.cidade,
             estado: estadoPadrao,
-            lat: '',
-            long: ''
+            lat: lat,
+            long: long
           };
           
           console.log('Profile: Localidade criada com mapeamento local:', localidade);

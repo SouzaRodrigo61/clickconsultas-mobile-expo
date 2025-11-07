@@ -66,7 +66,10 @@ export default function CadastroNome({ route }) {
           setProfile((state: any) => ({ ...state, nome }));
           handleNavigateToPerfil();
         })
-        .catch(() => setErrorMessage("Erro ao atualizar nome!"));
+        .catch(() => {
+          setErrorMessage("Erro ao atualizar nome!");
+          setRequired(true);
+        });
     else {
       setRequired(true);
     }

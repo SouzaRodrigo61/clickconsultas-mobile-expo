@@ -21,6 +21,7 @@ import Colors from "../../styles/Colors";
 import Fonts from "../../styles/Fonts";
 
 import { useProfile } from "../../contexts/profile";
+import { useAuth } from "../../contexts/auth";
 import { formatPhoneNumber } from "../../scripts/formatters";
 import moment from "moment";
 
@@ -34,6 +35,7 @@ export default function CadastroPerfil() {
   const [hasNull, setHasNull] = useState(false);
 
   const { profile, setProfile } = useProfile();
+  const { signed } = useAuth();
   const navigation = useNavigation();
 
   const handleNavigateTo = (field) => {
@@ -42,11 +44,38 @@ export default function CadastroPerfil() {
   };
 
   const fetch = async () => {
-    setLoading(true);
-    await api.get("/pacientes/profile").then(({ data: dados }) => {
-      setProfile((state: any) => ({ ...state, ...dados }));
+    // Verificar se usuário está autenticado
+    if (!signed) {
+      console.log('CadastroPerfil: Usuário não autenticado, abortando carregamento');
       setLoading(false);
-    });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { data: dados } = await api.get("/pacientes/profile");
+      
+      // Garantir que setProfile funcione mesmo quando state é null
+      setProfile((state: any) => {
+        if (!state) {
+          return dados;
+        }
+        return { ...state, ...dados };
+      });
+    } catch (error) {
+      console.error('CadastroPerfil: Erro ao carregar perfil:', error);
+      
+      // Erro de autenticação (401/403) será tratado pelo interceptor
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        console.log('CadastroPerfil: Erro de autenticação detectado');
+        // O interceptor vai fazer logout automático
+      }
+      
+      // Em caso de erro, não atualizar o profile
+      // O estado anterior será mantido
+    } finally {
+      setLoading(false);
+    }
   };
 
   const completeProfile = () => {

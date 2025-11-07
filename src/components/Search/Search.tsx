@@ -32,12 +32,30 @@ export default function Search({
   const fetch = async () => {
     if (search.trim() === "") return;
     setLoading(true);
-    const res = await request(
-      `/list-medicos/?lat=${long}&long=${lat}&radius=${radius}&nome=${search}`
-    );
-    const novosMedicos = await res?.data;
-    setSearchResult(novosMedicos);
-    setLoading(false);
+    try {
+      const res = await request(
+        `/list-medicos/?lat=${long}&long=${lat}&radius=${radius}&nome=${search}`
+      );
+      
+      if (res && res.data) {
+        const novosMedicos = res.data;
+        setSearchResult(novosMedicos || []);
+      } else {
+        setSearchResult([]);
+      }
+    } catch (error) {
+      console.error('Search: Erro ao buscar médicos:', error);
+      
+      // Erro de autenticação (401/403) será tratado pelo interceptor
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        console.log('Search: Erro de autenticação detectado');
+        // O interceptor vai fazer logout automático
+      }
+      
+      setSearchResult([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
